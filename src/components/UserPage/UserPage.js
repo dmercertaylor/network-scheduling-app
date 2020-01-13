@@ -6,24 +6,31 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 import moment from 'moment'
 
-// this could also be written with destructuring parameters as:
-// const UserPage = ({ user }) => (
-// and then instead of `props.user.username` you could use `user.username`
 export default function UserPage(){
+
+  // State setup
   const user = useSelector(state => state.user);
   const [email, setEmail] = useState('');
   const [date, setDate] = useState(moment().add(1, 'hour').format());
   const [message, setMessage] = useState('');
 
+  // Form submit
   const submitForm = event => {
     event.preventDefault();
+    // if firing from the button onClicked,
+    // this prevents a second fire that may
+    // occur from the forms onsubmit sometimes
     event.stopPropagation();
 
-    if(moment(date).isBefore(moment().add(2, 'minutes'))){
+    // Check if selected datetime is more than
+    // 2 minutes in the future.
+    if( moment(date).isBefore( moment().add(2, 'minutes'))){
       alert('Times must be at least 2 minutes in the future');
       return;
     }
 
+    // if all fields are filled, send email, date,
+    // and message to be mailed.
     if(email && date){
       Axios.post('/api/email', {email, date, message})
         .catch(error => {
@@ -52,7 +59,7 @@ export default function UserPage(){
         <Flatpickr data-enable-time
           value={date}
           onChange={date => setDate(date)}
-          options ={{minDate: moment().add(2, 'minutes').format()}}
+          options ={{ minDate: moment().add(2, 'minutes').format() }}
         />
         <br />
         <textarea
