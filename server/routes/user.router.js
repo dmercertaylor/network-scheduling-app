@@ -11,16 +11,27 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 });
 
 router.post('/register', async (req, res, next) => {
-    const username = req.body.username;
-    const password = await encryptLib.encryptPassword(req.body.password);
+    try {
+        const form = req.body;
+        const password = await encryptLib.encryptPassword(req.body.password);
 
-    const query = 'INSERT INTO "user" (username, password) VALUES ($1, $2) RETURNING id';
-    pool.query(query, [username, password])
-        .then(()=> res.sendStatus(201))
-        .catch(error => {
-            console.log(error);
-            res.sendStatus(500)
-        });
+        let query = `
+            INSERT INTO "user" (full_name, company, location, email)
+            VALUES ($1, $2, $3, $4) RETURNING id
+        `;
+        const idRows = await pool.query(query, [form.name, form.company, form.location, form.email]);
+        query = `
+            INSERT INTO "login" ("username", "password", "user_id")
+            VALUES ($1, $2, $3)
+        `
+        pool.query(query, [form.username, password, idRows.rows[0].id])
+            .then(results => {
+                res.sendStatus(200);
+            });
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error);
+    }
 });
 
 router.post('/login', userStrategy.authenticate('local'), (req, res) => {
