@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Button, FormControl, InputLabel, Input,
-  FormHelperText, TextField, Typography } from '@material-ui/core';
+import { Button, TextField, Typography } from '@material-ui/core';
+import AvatarUpload from '../AvatarUpload/AvatarUpload';
 
 const useStyles = makeStyles( theme => ({ 
   registerPage: {
@@ -52,7 +52,7 @@ export default function RegisterPage(){
   const [location, setLocation] = useState('');
   const [contact, setContact] = useState('');
   const [name, setName] = useState('');
-  const avatar = useRef();
+  const [avatar, setAvatar] = useState('');
 
   const registerUser = (event) => {
     event.preventDefault();
@@ -61,7 +61,9 @@ export default function RegisterPage(){
     if (username && password && email ) {
       dispatch({
         type: 'REGISTER',
-        payload: { username, password, email, company, location, contact, name }
+        payload: { username, password, email,
+            company, location, contact,
+            name, avatar }
       });
     } else {
       dispatch({type: 'REGISTRATION_INPUT_ERROR'});
@@ -139,32 +141,9 @@ export default function RegisterPage(){
             onChange={e => setContact(e.target.value)}
           />
         </div>
-        <div className={classes.imageInput}>
-          <label htmlFor="avatar-input">
-            Profile Image
-          </label>
-          <Button
-            color="primary"
-            component="span"
-          >
-            <input
-              id="avatar-input"
-              aria-describedby="avatar-input-helper"
-              type='file'
-              accept='image/*'
-              ref={avatar}
-              style={{display: 'none'}}
-              multiple={false}
-            />
-          </Button>
-          <Typography
-            component='p'
-            variant='caption'
-            id="avatar-input-helper"
-          >
-            For best results, choose a 1:1 image with the subject center
-          </Typography>
-        </div>
+        <AvatarUpload
+          onClose={img => setAvatar(img)}
+        />
         <div className={classes.buttonRow}>
           <Button
             className={classes.button}
@@ -188,6 +167,9 @@ export default function RegisterPage(){
 }
 
 /*
+backgroundColor	Sting	The color of the image background (default: white)
+closeIconColor	String	The close button color (default: white)
+shadingColor	String	The shading color (default: grey)
 
   onClose() {
     this.setState({preview: null})
@@ -197,7 +179,7 @@ export default function RegisterPage(){
     this.setState({preview})
   }
  
-  onBeforeFileLoad(elem) {
+  onBeforeFileLoad(elem) {       1048576
     if(elem.target.files[0].size > 71680){
       alert("File is too big!");
       elem.target.value = "";

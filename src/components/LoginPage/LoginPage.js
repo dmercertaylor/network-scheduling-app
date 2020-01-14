@@ -5,7 +5,6 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import AvatarUpload from '../AvatarUpload/AvatarUpload';
 
 const useStyles = makeStyles( theme => ({ 
   loginPage: {
@@ -85,9 +84,6 @@ export default function LoginPage(){
             onChange={e => setPassword(e.target.value)}
           />
         </div>
-        <AvatarUpload
-          onClose={(img)=>console.log(img)}
-        />
         {errors.loginMessage && (
           <Typography
             variant='body'
