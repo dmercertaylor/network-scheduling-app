@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Button, TextField, Typography } from '@material-ui/core';
 import AvatarUpload from '../AvatarUpload/AvatarUpload';
+import LoadingModal from '../LoadingModal/LoadingModal';
 
 const useStyles = makeStyles( theme => ({ 
   registerPage: {
@@ -72,6 +73,7 @@ export default function RegisterPage(){
 
   return (
     <div className={classes.registerPage}>
+      <LoadingModal />
       {errors.registrationMessage && (
         <Typography
           variant='body1'

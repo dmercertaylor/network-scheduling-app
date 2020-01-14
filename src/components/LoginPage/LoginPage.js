@@ -59,7 +59,6 @@ export default function LoginPage(){
 
   return (
     <div className={classes.loginPage}>
-      {console.log(theme)}
       <Typography
         component='h1'
         variant='h4'
@@ -86,7 +85,7 @@ export default function LoginPage(){
         </div>
         {errors.loginMessage && (
           <Typography
-            variant='body'
+            variant='body2'
             className={classes.alert}
             role="alert"
           >

@@ -1,78 +1,76 @@
-import React, {useState} from 'react';
-import { useSelector } from 'react-redux';
+import React, {useState, useEffect, useCallback} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import Axios from 'axios';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 import moment from 'moment'
+import { makeStyles, useTheme, Typography } from '@material-ui/core';
+
+const useStyle = makeStyles(theme => ({
+  body: {
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: '100%',
+    marginTop: '16px'
+  },
+  profilePicture: {
+    height: '40vw',
+    width: '40vw',
+    minWidth: '64px',
+    maxWidth: '256px',
+    maxHeight: '256px',
+    border: '4px solid ' + theme.palette.text.primary,
+    borderRadius: '50%',
+    margin: '8px'
+  },
+  contactInfo: {
+    display: 'grid',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gridTemplateColumns: '1fr 1fr'
+  },
+  textRight: {
+    textAlign: 'right'
+  }
+}));
 
 export default function UserPage(){
+  const theme = useTheme();
+  const classes = useStyle(theme);
+  
+  const displayKeys = ['full_name', 'company', 'location'];
+  const dispatch = useCallback(useDispatch(), []);
+  const profile = useSelector(state => state.profile);
 
-  // State setup
-  const user = useSelector(state => state.user);
-  const [email, setEmail] = useState('');
-  const [date, setDate] = useState(moment().add(1, 'hour').format());
-  const [message, setMessage] = useState('');
+  useEffect(()=>{
+    dispatch({type: 'FETCH_PROFILE'});
+  });
 
-  // Form submit
-  const submitForm = event => {
-    event.preventDefault();
-    // if firing from the button onClicked,
-    // this prevents a second fire that may
-    // occur from the forms onsubmit sometimes
-    event.stopPropagation();
-
-    // Check if selected datetime is more than
-    // 2 minutes in the future.
-    if( moment(date).isBefore( moment().add(2, 'minutes'))){
-      alert('Times must be at least 2 minutes in the future');
-      return;
-    }
-
-    // if all fields are filled, send email, date,
-    // and message to be mailed.
-    if(email && date){
-      Axios.post('/api/email', {email, date, message})
-        .catch(error => {
-          console.log(error)
-      });
-      setEmail('');
-      setDate(moment().add(1, 'hour').format());
-      setMessage('');
-    } else {
-      alert('Fill fields');
-    }
-  }
+  const ContactInfo = Object.keys(profile).filter(k => displayKeys.includes(k)).map((k, i) => {
+    return (
+      <React.Fragment key={i}>
+        <div className={classes.textRight}>{k}&nbsp;:</div>
+        <div>&nbsp;{profile[k]}</div>
+      </React.Fragment>
+    )
+  });
 
   return (
-    <div>
-      <h1 id="welcome">
-        Welcome, { user.username }!
-      </h1>
-      <form onSubmit={submitForm}>
-        <input
-          type='text'
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          placeholder='email address'
-        />
-        <Flatpickr data-enable-time
-          value={date}
-          onChange={date => setDate(date)}
-          options ={{ minDate: moment().add(2, 'minutes').format() }}
-        />
-        <br />
-        <textarea
-          rows='4'
-          cols='32'
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-          placeholder='Message here...'
-        />
-        <br />
-        <button onClick={submitForm}>Schedule email</button>
-      </form>
-      <LogOutButton className="log-in" />
+    <div className={classes.body}>
+      <img
+        src={profile.avatar_url || '/assets/sampleAvatar.png'}
+        alt={`Picture of ${profile.full_name}`}
+        className={classes.profilePicture}
+      />
+      <Typography variant="h4" component='h2'>
+        {profile.full_name}
+      </Typography>
+      <div className={classes.contactInfo}>
+        {ContactInfo}
+      </div>
     </div>
   );
 }

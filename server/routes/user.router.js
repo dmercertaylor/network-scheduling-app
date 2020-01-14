@@ -3,7 +3,7 @@ const { rejectUnauthenticated } = require('../modules/authentication-middleware'
 const encryptLib = require('../modules/encryption');
 const pool = require('../modules/pool');
 const userStrategy = require('../strategies/user.strategy');
-
+const s3 = require('../modules/s3');
 const router = express.Router();
 
 router.get('/', rejectUnauthenticated, (req, res) => {
@@ -24,10 +24,31 @@ router.post('/register', async (req, res, next) => {
             INSERT INTO "login" ("username", "password", "user_id")
             VALUES ($1, $2, $3)
         `
-        pool.query(query, [form.username, password, idRows.rows[0].id])
-            .then(results => {
-                res.sendStatus(200);
-            });
+        await pool.query(query, [form.username, password, idRows.rows[0].id]);
+
+
+        if(req.body.avatar){
+            const fileType = req.body.avatar.substring("data:image/".length, req.body.avatar.indexOf(";base64"));
+            const base64Data = new Buffer.from(req.body.avatar.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
+            const params = {
+                Bucket: process.env.BUCKET_NAME,
+                Key: `avatars/${idRows.rows[0].id}.${fileType}`, // File name you want to save as in S3
+                Body: base64Data,
+                ContentEncoding: 'base64',
+                ContentType: `image/${fileType}`
+            };
+            
+            const uploaded = await s3.upload(params).promise();
+
+            query = 'UPDATE "user" SET "avatar_url"=$1 WHERE "id" = $2';
+            pool.query(query, [uploaded.Location, idRows.rows[0].id]).
+                then(results => {
+                    res.sendStatus(200);
+                });
+        } else {
+            res.sendStatus(200);
+        }
     } catch (error) {
         res.sendStatus(500);
         console.log(error);

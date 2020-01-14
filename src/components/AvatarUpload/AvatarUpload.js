@@ -42,7 +42,7 @@ export default function AvatarUpload(props){
     }
 
     const onBeforeFileLoad = (elem) => {
-        if(elem.target.files[0].size > 1048576){
+        if(elem.target.files[0].size > 1500000){
             alert("Image size too large");
             elem.target.value = "";
         }
@@ -64,7 +64,7 @@ export default function AvatarUpload(props){
                 <Paper style={modalStyle} >
                     <Avatar
                         backgroundColor={theme.palette.background.paper}
-                        height={295}
+                        height={300}
                         onBeforeFileLoad={onBeforeFileLoad}
                         onCrop={img => setPreview(img)}
                         onClose={onClose}
@@ -78,7 +78,7 @@ export default function AvatarUpload(props){
                 variant='caption'
                 id="avatar-input-helper"
             >
-                For best results, choose a 1:1 image with the subject center
+                Images must be no more than 1.5mb
             </Typography>
         </div>
     )
