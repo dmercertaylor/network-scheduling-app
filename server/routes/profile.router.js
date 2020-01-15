@@ -4,14 +4,15 @@ const pool = require('../modules/pool');
 const userStrategy = require('../strategies/user.strategy');
 const router = express.Router();
 
-router.get('/', rejectUnauthenticated, (req, res) => {
-    pool.query('SELECT * FROM "user" WHERE "id"=$1', [req.user.user_id])
-        .then(result => {
-            res.send(result.rows[0]);
-        }).catch(error => {
-            res.sendStatus(500);
-            console.log(error);
-        });
+router.get('/', rejectUnauthenticated, async (req, res) => {
+    try{
+        const profile = await pool.query('SELECT * FROM "user" WHERE "id"=$1', [req.user.user_id]);
+        const times = await pool.query('SELECT "week_day", "start_time", "end_time" FROM "weekly_availability" WHERE "user_id"=$1', [req.user.user_id]);
+        res.send({...profile.rows[0], timesAvailable: times.rows});
+    }catch(error){
+        res.sendStatus(500);
+        console.log(error);
+    }
 });
 
 router.put('/', rejectUnauthenticated, (req, res) => {

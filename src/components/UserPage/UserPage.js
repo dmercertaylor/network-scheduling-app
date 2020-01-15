@@ -5,6 +5,7 @@ import Axios from 'axios';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 import moment from 'moment'
+import WeekTimeInput from './WeekTimeInput';
 import { makeStyles, useTheme, Typography } from '@material-ui/core';
 
 const useStyle = makeStyles(theme => ({
@@ -30,7 +31,8 @@ const useStyle = makeStyles(theme => ({
     display: 'grid',
     alignItems: 'center',
     justifyContent: 'center',
-    gridTemplateColumns: '1fr 1fr'
+    gridTemplateColumns: '1fr 1fr',
+    fontSize: "1rem"
   },
   textRight: {
     textAlign: 'right'
@@ -47,12 +49,16 @@ export default function UserPage(){
 
   useEffect(()=>{
     dispatch({type: 'FETCH_PROFILE'});
-  });
+  }, [dispatch]);
 
+  // Convert object keys to actually displayable text
   const ContactInfo = Object.keys(profile).filter(k => displayKeys.includes(k)).map((k, i) => {
     return (
       <React.Fragment key={i}>
-        <div className={classes.textRight}>{k}&nbsp;:</div>
+        <div className={classes.textRight}>
+          {k.replace(/_/g, ' ').replace(/(^|\s)[a-z]/g, (x) => x.toUpperCase())}
+          &nbsp;:
+        </div>
         <div>&nbsp;{profile[k]}</div>
       </React.Fragment>
     )
@@ -71,6 +77,7 @@ export default function UserPage(){
       <div className={classes.contactInfo}>
         {ContactInfo}
       </div>
+      <WeekTimeInput />
     </div>
   );
 }
