@@ -6,7 +6,7 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 import moment from 'moment'
 import WeekTimeInput from './WeekTimeInput';
-import { makeStyles, useTheme, Typography } from '@material-ui/core';
+import { makeStyles, useTheme, Typography, Switch, Button } from '@material-ui/core';
 
 const useStyle = makeStyles(theme => ({
   body: {
@@ -17,6 +17,10 @@ const useStyle = makeStyles(theme => ({
     maxWidth: '100%',
     marginTop: '16px'
   },
+  switchContainer: {
+    alignSelf: 'flex-end',
+    margin: '0 16px 16px 0'
+  },
   profilePicture: {
     height: '40vw',
     width: '40vw',
@@ -26,6 +30,9 @@ const useStyle = makeStyles(theme => ({
     border: '4px solid ' + theme.palette.text.primary,
     borderRadius: '50%',
     margin: '8px'
+  },
+  logOutButton: {
+    marginBottom: '16px'
   },
   contactInfo: {
     display: 'grid',
@@ -46,10 +53,21 @@ export default function UserPage(){
   const displayKeys = ['full_name', 'company', 'location'];
   const dispatch = useCallback(useDispatch(), []);
   const profile = useSelector(state => state.profile);
+  const [status, setStatus] = useState(profile);
+  
+  useEffect(() => {
+    setStatus(profile.status);
+  }, [profile])
 
   useEffect(()=>{
     dispatch({type: 'FETCH_PROFILE'});
   }, [dispatch]);
+
+  // handle status switch changes
+  const toggleAvailable = () => {
+    dispatch({type: "UPDATE_PROFILE", payload:{status: status?0:1, noUpdate: true}});
+    setStatus(status ? 0 : 1);
+  }
 
   // Convert object keys to actually displayable text
   const ContactInfo = Object.keys(profile).filter(k => displayKeys.includes(k)).map((k, i) => {
@@ -78,6 +96,23 @@ export default function UserPage(){
         {ContactInfo}
       </div>
       <WeekTimeInput />
+      <Typography variant="body2" className={classes.switchContainer}>
+        <label htmlFor="blockAvailableSwitch">
+          { status ? 'Unblock Availability':'Block All Availability' }
+        </label>
+        <Switch
+          id="blockAvailableSwitch"
+          checked={status !== 0}
+          color="primary"
+          onClick={toggleAvailable}
+        />
+      </Typography>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={()=>dispatch({type: 'LOGOUT'})}
+        className={classes.logOutButton}
+      >Log Out</Button>
     </div>
   );
 }

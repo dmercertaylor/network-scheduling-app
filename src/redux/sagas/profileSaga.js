@@ -24,8 +24,27 @@ function* fetchProfile() {
   }
 }
 
+function* updateProfile(action){
+  try{
+    const config = {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
+    }
+    if(action.payload.noUpdate){
+      delete action.payload.noUpdate;
+      yield axios.put('/api/profile', action.payload, config);
+    } else {
+      yield axios.put('/api/profile', action.payload, config);
+      yield put({type: 'FETCH_PROFILE'});
+    }
+  } catch (error) {
+    console.log('Profile put request failed', error);
+  }
+}
+
 function* profileSaga() {
   yield takeLatest('FETCH_PROFILE', fetchProfile);
+  yield takeLatest('UPDATE_PROFILE', updateProfile);
 }
 
 export default profileSaga;

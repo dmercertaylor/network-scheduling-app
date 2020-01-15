@@ -10,6 +10,7 @@ const passport = require('./strategies/user.strategy');
 const userRouter = require('./routes/user.router');
 const emailRouter = require('./routes/email.router');
 const profileRouter = require('./routes/profile.router');
+const searchRouter = require('./routes/search.router');
 
 app.use(bodyParser.json( {limit: '2mb'} ));
 app.use(bodyParser.urlencoded({ extended: true, limit: '2mb'}));

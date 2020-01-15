@@ -16,6 +16,7 @@ import Nav from '../Nav/Nav';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'
 
 import UserPage from '../UserPage/UserPage';
+import SearchPage from '../SearchPage/SearchPage';
 
 export default function App(){
   // useCallback ensures dispatch has
@@ -56,6 +57,10 @@ export default function App(){
               exact
               path="/home"
               component={UserPage}
+            />
+            <ProtectedRoute
+              exact path="/search"
+              component={SearchPage}
             />
             {/* This works the same as the other protected route, except that if the user is logged in,
             they will see the info page instead. */}
