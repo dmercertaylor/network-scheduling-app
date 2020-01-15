@@ -20,6 +20,7 @@ app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/api/search', searchRouter);
 app.use('/api/user', userRouter);
 app.use('/api/email', emailRouter);
 app.use('/api/profile', profileRouter);

@@ -2,6 +2,7 @@ import { all } from 'redux-saga/effects';
 import authenticationSaga from './authentication';
 import profileSaga from './profileSaga';
 import updateAvailableSaga from './updateAvailableSaga';
+import searchSaga from './searchSaga';
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
 // This is imported in index.js as rootSaga
@@ -13,6 +14,7 @@ export default function* rootSaga() {
   yield all([
     profileSaga(),
     updateAvailableSaga(),
+    searchSaga(),
     ...authenticationSaga
   ]);
 }
