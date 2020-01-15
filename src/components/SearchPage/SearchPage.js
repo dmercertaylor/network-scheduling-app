@@ -17,7 +17,8 @@ const useStyles = makeStyles(theme => ({
         width: '90%',
         maxWidth: '24rem',
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: '16px'
     }
 }));
 
@@ -30,9 +31,10 @@ function SearchResults(){
         <>
             <Typography variant='h5' component='h2'>
                 {term &&
-                    `${results.length} Result${results.length > 1 ? 's':''} for ${term}`}
+                    `${results.length} Result${results.length !== 1 ? 's':''} for ${term}`}
             </Typography>
-            { results && results.map((result, i) => <UserCard key={i} profile={result} />) }
+            { results && results.map((profile, i) => 
+                <UserCard key={i} profile={profile} showConnect={!profile.connected} />) }
         </>
     )
 }
@@ -68,7 +70,6 @@ export default function SearchPage(){
                     <SearchIcon />
                 </IconButton>
             </Paper>
-            <pre>{JSON.stringify(searchResults)}</pre>
             <SearchResults />
         </div>
     )
