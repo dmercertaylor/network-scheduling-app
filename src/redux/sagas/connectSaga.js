@@ -26,7 +26,7 @@ function* acceptConnection(action){
     yield axios.put(
         `/api/connections/acceptConnection/${action.payload}`,
         config);
-    put({type: "SEARCH_CHANGE", payload: 'accept'});
+    yield put({type: "FETCH_CONNECTIONS"});
     } catch (error) {
         console.log('Connect post request failed', error);
     }

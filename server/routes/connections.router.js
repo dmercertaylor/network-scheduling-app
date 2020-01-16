@@ -9,7 +9,9 @@ router.get('/', rejectUnauthenticated, (req, res) => {
         SELECT * FROM "friends" AS "f"
             JOIN "user" AS "u" ON "u"."id"="f"."friend_id"
             WHERE "f"."user_id"=$1
-            ORDER BY "f"."pending" DESC`;
+            ORDER BY
+                "f"."pending" DESC,
+                "f"."id" ASC`;
     pool.query(query, config)
         .then(results => {
             res.send(results.rows);

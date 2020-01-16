@@ -1,10 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import LogOutButton from '../LogOutButton/LogOutButton';
-import Axios from 'axios';
-import Flatpickr from 'react-flatpickr';
-import 'flatpickr/dist/themes/dark.css';
-import moment from 'moment'
 import WeekTimeInput from './WeekTimeInput';
 import { makeStyles, useTheme, Typography, Switch, Button } from '@material-ui/core';
 

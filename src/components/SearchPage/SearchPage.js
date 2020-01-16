@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Paper, Typography, InputBase, IconButton, makeStyles, useTheme} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
@@ -28,14 +28,14 @@ function SearchResults(){
     const refresh = useSelector(state => state.searchChange);
     const results = search.results;
     const term = search.searchTerm;
-    const dispatch = useDispatch();
+    const dispatch = useCallback(useDispatch(), []);
 
     useEffect(()=>{
         dispatch({
             type: 'FETCH_SEARCH',
             payload: term
         });
-    }, [refresh]);
+    }, [refresh, dispatch]);
 
     return (
         <>

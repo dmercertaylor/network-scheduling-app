@@ -14,12 +14,12 @@ router.post('/register', async (req, res, next) => {
     try {
         const form = req.body;
         const password = await encryptLib.encryptPassword(req.body.password);
-
+        const config = [form.name, form.company, form.location, form.email, form.contact];
         let query = `
-            INSERT INTO "user" (full_name, company, location, email)
-            VALUES ($1, $2, $3, $4) RETURNING id
+            INSERT INTO "user" (full_name, company, location, email, preferred_contact)
+            VALUES ($1, $2, $3, $4, $5) RETURNING id
         `;
-        const idRows = await pool.query(query, [form.name, form.company, form.location, form.email]);
+        const idRows = await pool.query(query, config);
         query = `
             INSERT INTO "login" ("username", "password", "user_id")
             VALUES ($1, $2, $3)

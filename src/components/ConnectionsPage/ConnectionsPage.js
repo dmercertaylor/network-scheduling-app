@@ -9,7 +9,6 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'center',
-        width: 'max-content',
         maxWidth: '100%',
         margin: '16px auto'
     },

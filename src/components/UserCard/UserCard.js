@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
-import { Card, CardMedia, CardContent,
-    makeStyles, useTheme, Typography, 
-    Button, Modal, Paper, TextField, Dialog } from '@material-ui/core';
+import { Card, CardMedia, makeStyles, useTheme, Typography, 
+    Button, Modal, TextField} from '@material-ui/core';
 
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 
@@ -28,17 +27,17 @@ const useStyles = makeStyles(theme => ({
     },
     card: {
         display: 'grid',
-        gridTemplateColumns: 'max-content auto',
+        gridTemplateColumns: 'max-content 8rem',
         gridRowGap: '8px',
+        gridColumnGap: '8px',
         padding: '16px',
-        alignItems: 'space-between',
-        justifyContent: 'start',
+        alignItems: 'center',
+        justifyContent: 'center',
         marginBottom: '16px',
         width: '95%',
         maxWidth: 340,
     },
     cardContent: {
-        padding: '8px !important',
         display: 'flex',
         flexFlow: 'column nowrap',
         justifyContent: 'center',
@@ -55,7 +54,6 @@ const useStyles = makeStyles(theme => ({
         backgroundSize: 'cover',
         borderRadius: '50%',
         border: '2px solid ' + theme.palette.text.primary,
-        marginRight: '8px'
     }
 }));
 
@@ -169,7 +167,7 @@ export default function UserCard(props){
                     color="primary"
                     onClick={acceptConnection}
                 >
-                    Connect Back
+                    Connect
                 </Button>
             );
         } else if (profile.connected){
@@ -198,29 +196,31 @@ export default function UserCard(props){
                 </Typography>
                 <Typography variant="body1" align='left'>
                     <span className={classes.noWrap}>
-                        {profile.company},&nbsp;
-                    </span>
-                    <span className={classes.noWrap}>
+                        {profile.company},
+                    </span> <span className={classes.noWrap}>
                         {profile.location}
                     </span>
                 </Typography>
-                {connectButton}
+                {profile.met_at &&
+                    <Typography variant='body1'>
+                        Met at {profile.met_at}
+                    </Typography>}
+                {!showRemove && connectButton}
             </div>
-            <div>
-                {showRemove && (
-                    <>
-                        <Button
-                            onClick={()=>setConfirmRemoveDialogOpen(true)}
-                            variant='contained'
-                            color='secondary'
-                        >Remove</Button>
-                        <ConfirmDialog open={confirmRemoveDialogOpen}
-                        title={`Remove ${profile.full_name}?`}
-                        onCancel={()=>setConfirmRemoveDialogOpen(false)}
-                        onConfirm={removeConnection} />
-                    </>
-                )}
-            </div>
+            {showRemove && (
+                <>
+                    <Button
+                        onClick={()=>setConfirmRemoveDialogOpen(true)}
+                        variant='contained'
+                        color='secondary'
+                    >Remove</Button>
+                    <ConfirmDialog open={confirmRemoveDialogOpen}
+                    title={`Remove ${profile.full_name}?`}
+                    onCancel={()=>setConfirmRemoveDialogOpen(false)}
+                    onConfirm={removeConnection} />
+                </>
+            )}
+            {showRemove && connectButton}
             <div>
                 {showContact && profile.preferred_contact && (
                     <Typography variant="body1" align='center'>
