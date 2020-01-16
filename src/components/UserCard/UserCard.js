@@ -2,7 +2,9 @@ import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import { Card, CardMedia, CardContent,
     makeStyles, useTheme, Typography, 
-    Button, Modal, Paper, TextField } from '@material-ui/core';
+    Button, Modal, Paper, TextField, Dialog } from '@material-ui/core';
+
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 
 const useStyles = makeStyles(theme => ({
     noWrap: {
@@ -27,6 +29,7 @@ const useStyles = makeStyles(theme => ({
     card: {
         display: 'grid',
         gridTemplateColumns: 'max-content auto',
+        gridRowGap: '8px',
         padding: '16px',
         alignItems: 'space-between',
         justifyContent: 'start',
@@ -51,7 +54,8 @@ const useStyles = makeStyles(theme => ({
         maxHeight: '128px',
         backgroundSize: 'cover',
         borderRadius: '50%',
-        border: '2px solid ' + theme.palette.text.primary
+        border: '2px solid ' + theme.palette.text.primary,
+        marginRight: '8px'
     }
 }));
 
@@ -120,10 +124,19 @@ function ConnectModal(props){
 export default function UserCard(props){
     const theme = useTheme();
     const classes = useStyles(theme);
-    const {profile, showConnect, showContact} = props;
+    const {profile, showConnect, showContact, showRemove} = props;
     const [openModal, setOpenModal] = useState(false);
+    const [confirmRemoveDialogOpen, setConfirmRemoveDialogOpen] = useState(false);
     const dispatch = useDispatch();
     let connectButton;
+
+    const removeConnection = () => {
+        setConfirmRemoveDialogOpen(false);
+        dispatch({
+            type: 'REMOVE_CONNECTION',
+            payload: profile.id
+        });
+    }
     
     const acceptConnection = () => {
         dispatch({
@@ -191,12 +204,29 @@ export default function UserCard(props){
                         {profile.location}
                     </span>
                 </Typography>
-                {showContact && (
-                    <Typography variant="body2" align='left'>
-                        {profile.preferred_contact}
+                {connectButton}
+            </div>
+            <div>
+                {showRemove && (
+                    <>
+                        <Button
+                            onClick={()=>setConfirmRemoveDialogOpen(true)}
+                            variant='contained'
+                            color='secondary'
+                        >Remove</Button>
+                        <ConfirmDialog open={confirmRemoveDialogOpen}
+                        title={`Remove ${profile.full_name}?`}
+                        onCancel={()=>setConfirmRemoveDialogOpen(false)}
+                        onConfirm={removeConnection} />
+                    </>
+                )}
+            </div>
+            <div>
+                {showContact && profile.preferred_contact && (
+                    <Typography variant="body1" align='center'>
+                        Contact via {profile.preferred_contact}
                     </Typography>
                 )}
-                {connectButton}
             </div>
         </Card>
     )

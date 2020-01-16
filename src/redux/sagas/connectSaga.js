@@ -32,9 +32,24 @@ function* acceptConnection(action){
     }
 }
 
+function* removeConnection(action){
+  try {
+    const config = {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+    };
+
+    yield axios.delete(`/api/connections/${action.payload}`, config);
+    yield put({type: 'FETCH_CONNECTIONS'});
+    } catch (error) {
+        console.log('Connect post request failed', error);
+    }
+}
+
 function* connectSaga() {
   yield takeLatest('MAKE_CONNECTION', makeConnection);
   yield takeLatest('ACCEPT_CONNECTION', acceptConnection);
+  yield takeLatest('REMOVE_CONNECTION', removeConnection);
 }
 
 export default connectSaga;

@@ -32,6 +32,19 @@ router.post('/sendRequest', rejectUnauthenticated, (req, res) => {
         });
 });
 
+router.delete('/:friend_id', rejectUnauthenticated, (req, res) => {
+    const query = 
+    `DELETE FROM "friends"
+        WHERE ("user_id"=$1 AND "friend_id"=$2)
+        OR ("friend_id"=$1 AND "user_id"=$2)`;
+    pool.query(query, [req.user.user_id, req.params.friend_id])
+        .then(results => res.sendStatus(200))
+        .catch(error => {
+            res.sendStatus(500);
+            console.log(error);
+        });
+});
+
 router.put('/acceptConnection/:friend_id', rejectUnauthenticated, (req, res) => {
     const config=[req.user.user_id, req.params.friend_id];
     const query=`
