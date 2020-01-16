@@ -3,6 +3,7 @@ import authenticationSaga from './authentication';
 import profileSaga from './profileSaga';
 import updateAvailableSaga from './updateAvailableSaga';
 import searchSaga from './searchSaga';
+import connectSaga from './connectSaga';
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
 // This is imported in index.js as rootSaga
@@ -15,6 +16,7 @@ export default function* rootSaga() {
     profileSaga(),
     updateAvailableSaga(),
     searchSaga(),
+    connectSaga(),
     ...authenticationSaga
   ]);
 }

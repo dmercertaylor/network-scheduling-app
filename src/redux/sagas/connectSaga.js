@@ -9,14 +9,32 @@ function* makeConnection(action) {
       withCredentials: true,
     };
 
-    yield axios.post(`/api/connections/${action.payload}`, config);
+    yield axios.post(`/api/connections/sendRequest`, action.payload, config);
+    put({type: "SEARCH_CHANGE", payload: 'new'});
   } catch (error) {
     console.log('Connect post request failed', error);
   }
 }
 
+function* acceptConnection(action){
+    try {
+    const config = {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+    };
+
+    yield axios.put(
+        `/api/connections/acceptConnection/${action.payload}`,
+        config);
+    put({type: "SEARCH_CHANGE", payload: 'accept'});
+    } catch (error) {
+        console.log('Connect post request failed', error);
+    }
+}
+
 function* connectSaga() {
   yield takeLatest('MAKE_CONNECTION', makeConnection);
+  yield takeLatest('ACCEPT_CONNECTION', acceptConnection);
 }
 
 export default connectSaga;

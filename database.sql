@@ -1,12 +1,19 @@
 CREATE DATABASE "dmt_prime_solo";
 \connect "dmt_prime_solo"
 
+--DROP TABLE "login";
+--DROP TABLE "friends";
+--DROP TABLE "weekly_availability";
+--DROP TABLE "matched_availability";
+--DROP TABLE "user";
+
 CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
   "full_name" varchar,
   "company" varchar,
   "location" varchar,
   "avatar_url" varchar,
+  "preferred_contact" varchar,
   "email" varchar,
   "status" int DEFAULT 0
 );
@@ -19,10 +26,10 @@ CREATE TABLE "login" (
 );
 
 CREATE TABLE "friends" (
-  "int" SERIAL PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "user_id" int REFERENCES "user" ("id"),
   "friend_id" int REFERENCES "user" ("id"),
-  "pending" int,
+  "pending" int DEFAULT 1, -- 0: not pending, 1: set but not responded, 2: recieved but not responded
   "last_met" date,
   "met_at" varchar
 );
@@ -42,3 +49,17 @@ CREATE TABLE "matched_availability" (
   "start_time" time,
   "end_time" time
 );
+
+CREATE OR REPLACE FUNCTION "send_friend_request" ("user_id" INT, "friend_id" INT, "met_at" VARCHAR)
+RETURNS void AS $$
+BEGIN
+	IF NOT EXISTS (
+		SELECT $1 FROM "friends" AS "f"
+		WHERE "f"."user_id"=$1 AND "f"."friend_id"=$2
+	)
+	THEN INSERT INTO "friends" ("user_id", "friend_id", "met_at", "pending")
+	VALUES ($1, $2, $3, 1), ($2, $1, $3, 2);
+	END IF;
+END;
+$$
+LANGUAGE 'plpgsql';

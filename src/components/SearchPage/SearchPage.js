@@ -34,7 +34,7 @@ function SearchResults(){
                     `${results.length} Result${results.length !== 1 ? 's':''} for ${term}`}
             </Typography>
             { results && results.map((profile, i) => 
-                <UserCard key={i} profile={profile} showConnect={!profile.connected} />) }
+                <UserCard key={i} profile={profile} showConnect />) }
         </>
     )
 }

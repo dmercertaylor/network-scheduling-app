@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
 import { Card, CardMedia, CardContent,
     makeStyles, useTheme, Typography, 
     Button, Modal, Paper, TextField } from '@material-ui/core';
@@ -58,8 +59,17 @@ function ConnectModal(props){
     const theme = useTheme();
     const classes = useStyles(theme);
     const [metAt, setMetAt] = useState('');
+    const dispatch = useDispatch();
     const {profile, open, close} = props;
     const onClose = () => {
+        setMetAt('');
+        close();
+    }
+    const onConnect = () => {
+        dispatch({
+            type: 'MAKE_CONNECTION',
+            payload: {met_at: metAt, friend_id: profile.id}
+        });
         setMetAt('');
         close();
     }
@@ -97,6 +107,7 @@ function ConnectModal(props){
                     <Button
                         variant='contained'
                         color='primary'
+                        onClick={onConnect}
                     >
                         Connect
                     </Button>
@@ -111,8 +122,51 @@ export default function UserCard(props){
     const classes = useStyles(theme);
     const {profile, showConnect, showContact} = props;
     const [openModal, setOpenModal] = useState(false);
-
-
+    const dispatch = useDispatch();
+    let connectButton;
+    
+    const acceptConnection = () => {
+        dispatch({
+            type: 'ACCEPT_CONNECTION',
+            payload: profile.id
+        })
+    }
+    
+    if(showConnect){
+        if( !profile.connected && !profile.pending ){
+            connectButton = (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={()=>setOpenModal(true)}
+                >
+                    Connect
+                </Button>
+            );
+        } else if (profile.pending === 1){
+            connectButton = (
+                <Typography variant='body1'>
+                    Connection Sent
+                </Typography>
+            );
+        } else if (profile.pending === 2){
+            connectButton = (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={acceptConnection}
+                >
+                    Connect Back
+                </Button>
+            );
+        } else if (profile.connected){
+            connectButton = (
+                <Button>
+                    Connected
+                </Button>
+            );
+        }
+    }
     return (
         <Card className={classes.card}>
             {showConnect &&
@@ -122,7 +176,7 @@ export default function UserCard(props){
                     close={()=>setOpenModal(false)}
             />}
             <CardMedia
-                image={profile.avatar_url}
+                image={profile.avatar_url || '/assets/sampleAvatar.png'}
                 className={classes.avatar}
             />
             <CardContent className={classes.cardContent}>
@@ -143,15 +197,7 @@ export default function UserCard(props){
                         {profile.preferred_contact}
                     </Typography>
                 )}
-                {showConnect && (
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={()=>setOpenModal(true)}
-                    >
-                        Connect
-                    </Button>
-                )}
+                {connectButton}
             </CardContent>
         </Card>
     )
