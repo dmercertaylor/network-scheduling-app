@@ -194,6 +194,7 @@ export default function WeekTimeInput(props){
                 }
             }
         }
+    
         dispatch({type: 'UPDATE_TIMES_AVAILABLE', payload: newTimesAvailable});
     }
 

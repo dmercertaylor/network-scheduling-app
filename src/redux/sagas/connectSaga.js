@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { put, takeLatest, select } from 'redux-saga/effects';
+import { put, takeLatest } from 'redux-saga/effects';
 
 // worker Saga: will be fired on "FETCH_USER" actions
 function* makeConnection(action) {
@@ -10,7 +10,7 @@ function* makeConnection(action) {
     };
 
     yield axios.post(`/api/connections/sendRequest`, action.payload, config);
-    put({type: "SEARCH_CHANGE", payload: 'new'});
+    yield put({type: "SEARCH_CHANGE", payload: 'new'});
   } catch (error) {
     console.log('Connect post request failed', error);
   }

@@ -1,4 +1,4 @@
-const searchChangeReducer = (state = [], action) => {
+const searchChangeReducer = (state = '', action) => {
     switch (action.type) {
       case 'SEARCH_CHANGE':
         return action.payload;

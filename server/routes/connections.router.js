@@ -7,11 +7,14 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     const config = [req.user.user_id];
     const query = `
         SELECT * FROM "friends" AS "f"
-            JOIN "user" AS "u" WHERE "u"."id"="f"."friend_id"
+            JOIN "user" AS "u" ON "u"."id"="f"."friend_id"
             WHERE "f"."user_id"=$1
-            ORDER BY "f"."pending" DESC`
+            ORDER BY "f"."pending" DESC`;
     pool.query(query, config)
-        .then(results => res.send(results.rows))
+        .then(results => {
+            res.send(results.rows);
+            console.log(results.rows);
+        })
         .catch(error => {
             res.sendStatus(500);
             console.log(error);

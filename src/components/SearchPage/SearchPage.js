@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Paper, Typography, InputBase, IconButton, makeStyles, useTheme} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
@@ -24,12 +24,22 @@ const useStyles = makeStyles(theme => ({
 
 function SearchResults(){
     const search = useSelector(state => state.searchResults);
+    // will change when we want to update search results
+    const refresh = useSelector(state => state.searchChange);
     const results = search.results;
     const term = search.searchTerm;
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        dispatch({
+            type: 'FETCH_SEARCH',
+            payload: term
+        });
+    }, [refresh]);
 
     return (
         <>
-            <Typography variant='h5' component='h2'>
+            <Typography variant='h5' component='h2' paragraph>
                 {term &&
                     `${results.length} Result${results.length !== 1 ? 's':''} for ${term}`}
             </Typography>

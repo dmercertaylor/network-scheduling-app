@@ -31,6 +31,7 @@ export default function Nav(props){
 
   // set active tab to the right place
   const curIndex = ['/home', '/search', '/connections', '/available'].indexOf(location.pathname);
+  if(curIndex === -1) curIndex = 0;
   const [activeTab, setActiveTab] = useState(curIndex);
 
   // return if not logged in

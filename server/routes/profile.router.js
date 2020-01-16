@@ -38,7 +38,7 @@ router.put('/updateTimes', rejectUnauthenticated, async (req, res) => {
         res.sendStatus(500);
         console.log(error);
     }
-})
+});
 
 router.put('/', rejectUnauthenticated, (req, res) => {
     const acceptedKeys = ['full_name', 'company', 'location', 'avatar_url', 'email', 'status'];

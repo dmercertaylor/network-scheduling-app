@@ -4,12 +4,14 @@ import profile from './profileReducer';
 import authenticationReducers from './authentication/index';
 import searchResults from './searchResultsReducer';
 import searchChange from './searchChangeReducer';
+import connections from './connectionsReducer';
 
 const stateReducer = combineReducers({
     loading,
     profile,
     searchResults,
     searchChange,
+    connections,
     ...authenticationReducers // reducers regaurding login
 });
 

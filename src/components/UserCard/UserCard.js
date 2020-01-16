@@ -25,33 +25,33 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'space-between'
     },
     card: {
-        display: 'flex',
-        flexFlow: 'row nowrap',
+        display: 'grid',
+        gridTemplateColumns: 'max-content auto',
         padding: '16px',
         alignItems: 'space-between',
-        justifyContent: 'center',
-        marginTop: '16px'
+        justifyContent: 'start',
+        marginBottom: '16px',
+        width: '95%',
+        maxWidth: 340,
     },
     cardContent: {
         padding: '8px !important',
         display: 'flex',
         flexFlow: 'column nowrap',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        overflow: 'wrap'
     },
     metInput: {
         margin: 16
     },
     avatar: {
-        minHeight: '30vw',
-        minWidth: '30vw',
         width: '30vw',
         height: '30vw',
-        maxWidth: 115,
-        maxHeight: 115,
+        maxWidth: '128px',
+        maxHeight: '128px',
         backgroundSize: 'cover',
         borderRadius: '50%',
-        border: '2px solid ' + theme.palette.text.primary,
-        marginRight: '8px'
+        border: '2px solid ' + theme.palette.text.primary
     }
 }));
 
@@ -161,9 +161,9 @@ export default function UserCard(props){
             );
         } else if (profile.connected){
             connectButton = (
-                <Button>
+                <Typography variant='body1'>
                     Connected
-                </Button>
+                </Typography>
             );
         }
     }
@@ -179,15 +179,14 @@ export default function UserCard(props){
                 image={profile.avatar_url || '/assets/sampleAvatar.png'}
                 className={classes.avatar}
             />
-            <CardContent className={classes.cardContent}>
+            <div className={classes.cardContent}>
                 <Typography variant="h5" component="h4" align='left'>
                     {profile.full_name}
                 </Typography>
                 <Typography variant="body1" align='left'>
                     <span className={classes.noWrap}>
-                        {profile.company}
+                        {profile.company},&nbsp;
                     </span>
-                    &nbsp;-&nbsp;
                     <span className={classes.noWrap}>
                         {profile.location}
                     </span>
@@ -198,7 +197,7 @@ export default function UserCard(props){
                     </Typography>
                 )}
                 {connectButton}
-            </CardContent>
+            </div>
         </Card>
     )
 }

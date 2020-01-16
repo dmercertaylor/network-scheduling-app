@@ -17,6 +17,7 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'
 
 import UserPage from '../UserPage/UserPage';
 import SearchPage from '../SearchPage/SearchPage';
+import ConnectionsPage from '../ConnectionsPage/ConnectionsPage';
 
 export default function App(){
   // useCallback ensures dispatch has
@@ -61,6 +62,10 @@ export default function App(){
             <ProtectedRoute
               exact path="/search"
               component={SearchPage}
+            />
+            <ProtectedRoute
+              exact path="/connections"
+              component={ConnectionsPage}
             />
             {/* This works the same as the other protected route, except that if the user is logged in,
             they will see the info page instead. */}
