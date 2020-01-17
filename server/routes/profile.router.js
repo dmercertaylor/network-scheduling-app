@@ -26,8 +26,6 @@ router.put('/updateTimes', rejectUnauthenticated, async (req, res) => {
             config.push(time.week_day, time.start_time, time.end_time);
             return `($1, $${i*3+2}, $${i*3+3}, $${i*3+4})`;
         }).join(', ');
-        console.log(config);
-        console.log(values);
         const insertQuery = `
             INSERT INTO "weekly_availability" ("user_id", "week_day", "start_time", "end_time")
             VALUES ${values}

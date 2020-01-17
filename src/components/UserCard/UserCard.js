@@ -104,7 +104,7 @@ function ConnectModal(props){
                         color='secondary'
                         onClick={onClose}
                     >
-                        Cancle
+                        Cancel
                     </Button>
                     <Button
                         variant='contained'
@@ -196,7 +196,8 @@ export default function UserCard(props){
                 </Typography>
                 <Typography variant="body1" align='left'>
                     <span className={classes.noWrap}>
-                        {profile.company},
+                        {profile.company}
+                        {profile.company && ','}
                     </span> <span className={classes.noWrap}>
                         {profile.location}
                     </span>

@@ -5,6 +5,7 @@ import authenticationReducers from './authentication/index';
 import searchResults from './searchResultsReducer';
 import searchChange from './searchChangeReducer';
 import connections from './connectionsReducer';
+import matched from './matchedReducer';
 
 const stateReducer = combineReducers({
     loading,
@@ -12,6 +13,7 @@ const stateReducer = combineReducers({
     searchResults,
     searchChange,
     connections,
+    matched,
     ...authenticationReducers // reducers regaurding login
 });
 

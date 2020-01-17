@@ -15,7 +15,6 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     pool.query(query, config)
         .then(results => {
             res.send(results.rows);
-            console.log(results.rows);
         })
         .catch(error => {
             res.sendStatus(500);
