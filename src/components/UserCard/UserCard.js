@@ -5,6 +5,9 @@ import { Card, CardMedia, makeStyles, useTheme, Typography,
 
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 
+import days from '../../modules/days';
+import formatTime from '../../modules/formatTime';
+
 const useStyles = makeStyles(theme => ({
     noWrap: {
         whiteSpace: 'nowrap'
@@ -119,10 +122,36 @@ function ConnectModal(props){
     )
 }
 
+
+function TimesAvailable(props){
+    const times = props.profile.times;
+    const strings = [
+        undefined, undefined, undefined, undefined,
+        undefined, undefined, undefined
+    ];
+    times.forEach(({start_time, end_time, week_day}) => {
+        if(strings[week_day]){
+            strings[week_day] += `, ${formatTime(start_time)} - ${formatTime(end_time)}`;
+        } else {
+            strings[week_day] = `${days[week_day]}: ${formatTime(start_time)} - ${formatTime(end_time)}`;
+        }
+    });
+    return (
+        <>
+        {strings.filter(a => !!a).map((string, i) => (
+            <Typography key={i} variant='body1'>
+                {string}
+            </Typography>
+        ))}
+        </>
+    )
+}
+
 export default function UserCard(props){
     const theme = useTheme();
     const classes = useStyles(theme);
-    const {profile, showConnect, showContact, showRemove} = props;
+    const {profile, showConnect, showContact,
+        showRemove, showTimesAvailable} = props;
     const [openModal, setOpenModal] = useState(false);
     const [confirmRemoveDialogOpen, setConfirmRemoveDialogOpen] = useState(false);
     const dispatch = useDispatch();
@@ -222,12 +251,15 @@ export default function UserCard(props){
                 </>
             )}
             {showRemove && connectButton}
-            <div>
+            <div style={showTimesAvailable ? {gridColumnStart: 'span 2'}:{}}>
                 {showContact && profile.preferred_contact && (
                     <Typography variant="body1" align='center'>
                         Contact via {profile.preferred_contact}
                     </Typography>
                 )}
+                {showTimesAvailable && 
+                    <TimesAvailable profile={profile} />
+                }
             </div>
         </Card>
     )

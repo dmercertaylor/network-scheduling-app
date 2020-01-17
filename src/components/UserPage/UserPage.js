@@ -48,15 +48,20 @@ export default function UserPage(){
   const displayKeys = ['full_name', 'company', 'location'];
   const dispatch = useCallback(useDispatch(), []);
   const profile = useSelector(state => state.profile);
-  const [status, setStatus] = useState(profile);
+  const [status, setStatus] = useState(profile.status);
   
   useEffect(() => {
     setStatus(profile.status);
-  }, [profile])
+    // update profile if status has changed
+  }, [profile]);
 
   useEffect(()=>{
-    dispatch({type: 'FETCH_PROFILE'});
-  }, [dispatch]);
+    return function(){
+      if(status !== profile.status){
+        dispatch({type: 'FETCH_PROFILE'});
+      }
+    }
+  }, [status]);
 
   // handle status switch changes
   const toggleAvailable = () => {
