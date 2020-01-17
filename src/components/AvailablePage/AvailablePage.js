@@ -45,7 +45,7 @@ export default function AvailablePage(){
             }
             {profile.status === 0 && matched.map((profile, i) => (
                 <React.Fragment key={i}>
-                    <UserCard profile={profile} showTimesAvailable />
+                    <UserCard profile={profile} showTimesAvailable showContact />
                 </React.Fragment>
             ))}
         </div>

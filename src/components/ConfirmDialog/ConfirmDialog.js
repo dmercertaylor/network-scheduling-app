@@ -7,11 +7,16 @@ import Button from '@material-ui/core/Button';
 export default function ConfirmDialog(props){
     return (
         <Dialog
+            /* some boolean value which says if the dialog should be open */
             open={props.open}
             maxWidth="xs"
         >
+            {/* I'm passing into props a title and other values to appear */}
             {props.title && <DialogTitle>{props.title}</DialogTitle>}
+                
             <DialogActions>
+                {/* props.onCancel and props.onConfirm
+                 is a function passed from the parent component */}
                 <Button autoFocus onClick={props.onCancel} color="primary">
                     {props.cancelText || 'Cancel'}
                 </Button>
