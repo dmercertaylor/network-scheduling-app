@@ -32,7 +32,7 @@ router.post('/register', async (req, res, next) => {
             const base64Data = new Buffer.from(req.body.avatar.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
             const params = {
-                Bucket: process.env.BUCKET_NAME,
+                Bucket: process.env.S3_BUCKET_NAME,
                 Key: `avatars/${idRows.rows[0].id}.${fileType}`, // File name you want to save as in S3
                 Body: base64Data,
                 ContentEncoding: 'base64',
