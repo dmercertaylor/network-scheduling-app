@@ -59,6 +59,7 @@ export default function SearchPage(){
 
     const onSearch = e => {
         e.stopPropagation();
+        e.preventDefault();
         dispatch({type: "FETCH_SEARCH", payload: searchTerm});
         setSearchTerm('');
     }
