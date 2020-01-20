@@ -27,11 +27,6 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'space-between',
         alignItems: 'center'
     },
-    timeRow: {
-        display: 'flex',
-        flexFlow: 'row nowrap',
-        touchAction: 'none',
-    },
     timeBox: {
         maxWidth: '90vw',
         overflowX: 'scroll',
@@ -97,7 +92,13 @@ export default function WeekTimeInput(props){
         backgroundColor: theme.palette.background.paper,
         zIndex: 1700,
         top: headerScroll - 2
-    }
+    };
+
+    const timeRow = {
+        display: 'flex',
+        flexFlow: 'row nowrap',
+        touchAction: editMode ? 'none' : 'auto'
+    };
 
     // Scroll table headers to the right place
     const setScroll = e => {
@@ -124,7 +125,6 @@ export default function WeekTimeInput(props){
             }
         });
         setTimesAvailable(newTimes);
-        console.log(newTimes);
     }
 
     // If appropriate, flip time box from on to off
@@ -138,13 +138,24 @@ export default function WeekTimeInput(props){
 
     // create time boxes that can be flipped
     const boxes = times.map((time, tIndex) => {
-        const onPointerDown = (day, time) => {
-            if(timesAvailable[time][day]){
-                setMouseMode('delete');
-                flipTimeAvailable(day, time);
+        const onPointerDown = dIndex => e => {
+            if(editMode){
+                document.getElementById(`timeSelection${tIndex}${dIndex}`).releasePointerCapture(e.pointerId);
+                if(timesAvailable[tIndex][dIndex]){
+                    setMouseMode('delete');
+                    flipTimeAvailable(dIndex, tIndex);
+                } else {
+                    setMouseMode('add');
+                    flipTimeAvailable(dIndex, tIndex, true);
+                }
             } else {
-                setMouseMode('add');
-                flipTimeAvailable(day, time, true);
+            }
+        }
+
+        const onPointerEnter = dIndex => e => {
+            if(mouseMode){
+                e.preventDefault();
+                flipTimeAvailable(dIndex, tIndex);
             }
         }
         return (
@@ -152,17 +163,12 @@ export default function WeekTimeInput(props){
                 <div className="unselectable" style={timeColStickyStyle} onSelect={null}>
                     {time}
                 </div>
-                <div className={classes.timeRow}>
+                <div style={timeRow}>
                     {days.map((day, dIndex)=>(
                         <div id = {`timeSelection${tIndex}${dIndex}`}
                             key={(tIndex + 1) * days.length + dIndex}
-                            onPointerEnter={e => {e.preventDefault(); mouseMode && flipTimeAvailable(dIndex, tIndex);}}
-                            onPointerDown={e=>{
-                                if(editMode){
-                                    document.getElementById(`timeSelection${tIndex}${dIndex}`)
-                                        .releasePointerCapture(e.pointerId);
-                                    onPointerDown(dIndex, tIndex);
-                            }}}
+                            onPointerEnter={onPointerEnter(dIndex)}
+                            onPointerDown={onPointerDown(dIndex)}
                             className={(timesAvailable[tIndex] && timesAvailable[tIndex][dIndex]) ?
                                 classes.timeActive : classes.timeNotActive}
                         >
