@@ -53,7 +53,7 @@ export default function UserPage(){
   useEffect(() => {
     setStatus(profile.status);
     // update profile if status has changed
-  }, [profile]);
+  }, [profile.status]);
 
   useEffect(()=>{
     return function(){
@@ -61,7 +61,7 @@ export default function UserPage(){
         dispatch({type: 'FETCH_PROFILE'});
       }
     }
-  }, [status]);
+  }, [dispatch, status, profile.status]);
 
   // handle status switch changes
   const toggleAvailable = () => {
@@ -86,7 +86,7 @@ export default function UserPage(){
     <div className={classes.body}>
       <img
         src={profile.avatar_url || '/assets/sampleAvatar.png'}
-        alt={`Picture of ${profile.full_name}`}
+        alt={`${profile.full_name}'s Avatar`}
         className={classes.profilePicture}
       />
       <Typography variant="h4" component='h2'>

@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import { Card, CardMedia, makeStyles, useTheme, Typography, 
-    Button, Modal, TextField} from '@material-ui/core';
+    Button} from '@material-ui/core';
 
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
+import ConnectModal from './ConnectModal';
+import {DatePicker} from '@material-ui/pickers';
 
 import days from '../../modules/days';
 import formatTime from '../../modules/formatTime';
@@ -12,25 +14,9 @@ const useStyles = makeStyles(theme => ({
     noWrap: {
         whiteSpace: 'nowrap'
     },
-    modalPaper: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        display: 'flex',
-        flexFlow: 'column nowrap',
-        maxWidth: '100vw',
-        padding: '16px 8px',
-        backgroundColor: theme.palette.background.default
-    },
-    modalButtons: {
-        display: 'flex',
-        flexFlow: 'row wrap',
-        justifyContent: 'space-between'
-    },
     card: {
         display: 'grid',
-        gridTemplateColumns: 'max-content 8rem',
+        gridTemplateColumns: '1fr 2fr',
         gridRowGap: '8px',
         gridColumnGap: '8px',
         padding: '16px',
@@ -46,9 +32,6 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         overflow: 'wrap'
     },
-    metInput: {
-        margin: 16
-    },
     avatar: {
         width: '30vw',
         height: '30vw',
@@ -59,68 +42,6 @@ const useStyles = makeStyles(theme => ({
         border: '2px solid ' + theme.palette.text.primary,
     }
 }));
-
-function ConnectModal(props){
-    const theme = useTheme();
-    const classes = useStyles(theme);
-    const [metAt, setMetAt] = useState('');
-    const dispatch = useDispatch();
-    const {profile, open, close} = props;
-    const onClose = () => {
-        setMetAt('');
-        close();
-    }
-    const onConnect = () => {
-        dispatch({
-            type: 'MAKE_CONNECTION',
-            payload: {met_at: metAt, friend_id: profile.id}
-        });
-        setMetAt('');
-        close();
-    }
-    return (
-        <Modal open={open} className={classes.modal} onBackdropClick={onClose}>
-            <div className={classes.modalPaper}>
-                <UserCard profile={profile} />
-                <div className={classes.metInput}>
-                    <Typography
-                        className={classes.noWrap}
-                        variant='body1'
-                        component='label'
-                        htmlFor="met-at-input"
-                    >
-                        Met At:
-                    </Typography>
-                    <TextField
-                        id="met-at-input"
-                        helperText={
-                            `Indicate the event or location where you met ${profile.full_name}`
-                        }
-                        autoFocus
-                        value={metAt}
-                        onChange={e=>setMetAt(e.target.value)}
-                    />
-                </div>
-                <div className={classes.modalButtons}>
-                    <Button
-                        variant='contained'
-                        color='secondary'
-                        onClick={onClose}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant='contained'
-                        color='primary'
-                        onClick={onConnect}
-                    >
-                        Connect
-                    </Button>
-                </div>
-            </div>
-        </Modal>
-    )
-}
 
 
 function TimesAvailable(props){
@@ -151,11 +72,16 @@ export default function UserCard(props){
     const theme = useTheme();
     const classes = useStyles(theme);
     const {profile, showConnect, showContact,
-        showRemove, showTimesAvailable} = props;
+        showRemove, showTimesAvailable, showLastMet} = props;
     const [openModal, setOpenModal] = useState(false);
     const [confirmRemoveDialogOpen, setConfirmRemoveDialogOpen] = useState(false);
+    const [datePickerOpen, setDatePickerOpen] = useState(false);
     const dispatch = useDispatch();
     let connectButton;
+
+    useEffect(()=>{
+        profile.last_met = new Date(profile.last_met);
+    }, [profile])
 
     const removeConnection = () => {
         setConfirmRemoveDialogOpen(false);
@@ -170,6 +96,15 @@ export default function UserCard(props){
             type: 'ACCEPT_CONNECTION',
             payload: profile.id
         })
+    }
+
+    const submitNewMeetingDate = (date) => {
+        dispatch({
+            type: 'ADD_MEETING',
+            payload: {friend_id: profile.id, date}
+        });
+        dispatch({ type: 'FETCH_MATCHED_TIMES' });
+        setDatePickerOpen(false);
     }
     
     if(showConnect){
@@ -207,6 +142,7 @@ export default function UserCard(props){
             );
         }
     }
+
     return (
         <Card className={classes.card}>
             {showConnect &&
@@ -235,7 +171,19 @@ export default function UserCard(props){
                     <Typography variant='body1'>
                         Met at {profile.met_at}
                     </Typography>}
-                {!showRemove && connectButton}
+                {showLastMet &&
+                    <Typography variant='body1'>
+                        {profile.last_met ?
+                            `Last met ${new Date(profile.last_met).toLocaleDateString("en-US")}` :
+                            `No past meetings`}
+                    </Typography>
+                }
+                {showContact && profile.preferred_contact && (
+                    <Typography variant="body1">
+                        Contact via {profile.preferred_contact}
+                    </Typography>
+                )}
+                {!showRemove && showConnect && connectButton}
             </div>
             {showRemove && (
                 <>
@@ -244,19 +192,40 @@ export default function UserCard(props){
                         variant='contained'
                         color='secondary'
                     >Remove</Button>
-                    <ConfirmDialog open={confirmRemoveDialogOpen}
-                    title={`Remove ${profile.full_name}?`}
-                    onCancel={()=>setConfirmRemoveDialogOpen(false)}
-                    onConfirm={removeConnection} />
+                    <ConfirmDialog
+                        open={confirmRemoveDialogOpen}
+                        title={`Remove ${profile.full_name}?`}
+                        onCancel={()=>setConfirmRemoveDialogOpen(false)}
+                        onConfirm={removeConnection}
+                    />
                 </>
             )}
-            {showRemove && connectButton}
+            {showRemove && showConnect && connectButton}
+            {showLastMet && (
+                <>
+                    <Button>
+                        Skip
+                    </Button>
+                    <div>
+                        <Button
+                            onClick = {()=>setDatePickerOpen(true)}
+                            variant='contained'
+                            color = 'primary'
+                        >
+                            Mark&nbsp;met
+                        </Button>
+                        <DatePicker
+                            style={{display: 'none'}}
+                            open={datePickerOpen}
+                            disableFuture
+                            onChange={submitNewMeetingDate}
+                            onClose={()=>setDatePickerOpen(false)}
+                            hidden
+                        />
+                    </div>
+                </>
+            )}
             <div style={showTimesAvailable ? {gridColumnStart: 'span 2'}:{}}>
-                {showContact && profile.preferred_contact && (
-                    <Typography variant="body1" align='center'>
-                        Contact via {profile.preferred_contact}
-                    </Typography>
-                )}
                 {showTimesAvailable && 
                     <TimesAvailable profile={profile} />
                 }

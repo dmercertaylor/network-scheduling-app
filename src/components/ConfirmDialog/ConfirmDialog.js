@@ -2,6 +2,7 @@ import React from 'react'
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 
 
@@ -14,7 +15,7 @@ export default function ConfirmDialog(props){
         >
             {/* I'm passing into props a title and other values to appear */}
             {props.title && <DialogTitle>{props.title}</DialogTitle>}
-                
+            {props.content && <DialogContent>{props.content}</DialogContent>}
             <DialogActions>
                 {/* props.onCancel and props.onConfirm
                  is a function passed from the parent component */}

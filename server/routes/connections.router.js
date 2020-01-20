@@ -22,6 +22,21 @@ router.get('/', rejectUnauthenticated, (req, res) => {
         })
 });
 
+router.put('/newMeeting/:id', rejectUnauthenticated, (req, res) => {
+    const query = `
+        UPDATE "friends" SET "last_met"=$1
+        WHERE (("user_id" = $2 AND "friend_id" = $3)
+            OR ("user_id" = $3 AND "friend_id" = $2))
+        AND ("last_met" < $1 OR "last_met" IS NULL)`;
+    console.log(req.body.date, req.user.id, req.params.id);
+    pool.query(query, [new Date(req.body.date), req.user.id, req.params.id])
+        .then(results => res.sendStatus(200))
+        .catch(error => {
+            res.sendStatus(500);
+            console.log(error);
+        });
+})
+
 router.post('/sendRequest', rejectUnauthenticated, (req, res) => {
     const config=[req.user.user_id, req.body.friend_id, req.body.met_at];
     const query = `SELECT "send_friend_request"($1, $2, $3)`; 

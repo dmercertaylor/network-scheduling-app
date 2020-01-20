@@ -45,7 +45,7 @@ export default function ConnectionsPage(){
 
     const connected = arrs[0].map((profile, i) => 
         <UserCard key={i} profile={profile}
-        showRemove showContact />
+        showRemove showContact showLastMet />
     );
 
     return(

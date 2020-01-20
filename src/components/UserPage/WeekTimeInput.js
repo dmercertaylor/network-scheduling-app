@@ -84,15 +84,21 @@ export default function WeekTimeInput(props){
         zIndex: 1600,
     };
 
-    const dayRowStickyStyle= {
+    const dayRowStickyStyle = {
         display: 'flex',
         flexFlow: 'row nowrap',
-        touchAction: 'none',
         position: 'relative',
         backgroundColor: theme.palette.background.paper,
         zIndex: 1700,
         top: headerScroll - 2
     };
+
+    const dayRowCornerStyle = {
+        position: 'relative',
+        backgroundColor: theme.palette.background.paper,
+        zIndex: 1700,
+        top: headerScroll - 2
+    }
 
     const timeRow = {
         display: 'flex',
@@ -234,7 +240,7 @@ export default function WeekTimeInput(props){
                 ref={timeBoxRef}
                 onScroll={setScroll}
             >
-                <div></div>
+                <div style={dayRowCornerStyle}></div>
                 <div style={dayRowStickyStyle}>
                     {['Su','M','T','W','Th','F','Sa'].map((day, i) => (
                         <div key={i} className={classes.timeNotActive}>{day}</div>

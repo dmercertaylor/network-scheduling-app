@@ -15,7 +15,7 @@ CREATE TABLE "user" (
   "avatar_url" varchar,
   "preferred_contact" varchar,
   "email" varchar,
-  "status" int DEFAULT 0
+  "status" int DEFAULT 0 -- 0: available, 1: unavailable
 );
 
 CREATE TABLE "login" (
@@ -29,8 +29,9 @@ CREATE TABLE "friends" (
   "id" SERIAL PRIMARY KEY,
   "user_id" int REFERENCES "user" ("id"),
   "friend_id" int REFERENCES "user" ("id"),
-  "pending" int DEFAULT 1, -- 0: not pending, 1: set but not responded, 2: recieved but not responded
+  "pending" int DEFAULT 1, -- 0: not pending, 1: sent but not responded, 2: recieved but not responded
   "last_met" date,
+  "skip_date" date,
   "met_at" varchar
 );
 
@@ -38,14 +39,6 @@ CREATE TABLE "weekly_availability" (
   "id" SERIAL PRIMARY KEY,
   "user_id" int REFERENCES "user" ("id"),
   "week_day" int,
-  "start_time" time,
-  "end_time" time
-);
-
-CREATE TABLE "matched_availability" (
-  "id" SERIAL PRIMARY KEY,
-  "user_id" int REFERENCES "user" ("id"),
-  "day" date,
   "start_time" time,
   "end_time" time
 );
