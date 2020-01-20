@@ -17,9 +17,8 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
             JOIN "user" AS "fp" ON "f"."friend_id"="fp"."id"
             JOIN "weekly_availability" AS "wa" ON "wa"."user_id"="f"."friend_id"
             WHERE "u"."id"=$1 AND "f"."pending"=0 AND "fp"."status"=0
-            GROUP BY "f"."friend_id", "fp"."id", "f"."last_met", "f"."met_at"
-            ORDER BY GREATEST("f"."last_met", "f"."skip_date") DESC
-            NULLS LAST`;
+            GROUP BY "f"."friend_id", "fp"."id", "f"."last_met", "f"."met_at", "f"."skip_date"
+            ORDER BY GREATEST("f"."last_met", "f"."skip_date") ASC`;
 
         let userTimes = await pool.query(userQuery, [req.user.user_id]);
         let friendTimes = await pool.query(friendsQuery, [req.user.user_id]);

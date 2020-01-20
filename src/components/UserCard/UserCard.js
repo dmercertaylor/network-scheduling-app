@@ -72,7 +72,7 @@ export default function UserCard(props){
     const theme = useTheme();
     const classes = useStyles(theme);
     const {profile, showConnect, showContact,
-        showRemove, showTimesAvailable, showLastMet} = props;
+        showRemove, showTimesAvailable, showLastMet, showSkip} = props;
     const [openModal, setOpenModal] = useState(false);
     const [confirmRemoveDialogOpen, setConfirmRemoveDialogOpen] = useState(false);
     const [datePickerOpen, setDatePickerOpen] = useState(false);
@@ -81,7 +81,7 @@ export default function UserCard(props){
 
     useEffect(()=>{
         profile.last_met = new Date(profile.last_met);
-    }, [profile])
+    }, [profile]);
 
     const removeConnection = () => {
         setConfirmRemoveDialogOpen(false);
@@ -105,6 +105,11 @@ export default function UserCard(props){
         });
         dispatch({ type: 'FETCH_MATCHED_TIMES' });
         setDatePickerOpen(false);
+    }
+
+    const skipMeeting = () => {
+        dispatch({type: 'ADD_SKIP', payload: {friend_id: profile.id} } );
+        dispatch({type: 'FETCH_MATCHED_TIMES'});
     }
     
     if(showConnect){
@@ -180,7 +185,7 @@ export default function UserCard(props){
                 }
                 {showContact && profile.preferred_contact && (
                     <Typography variant="body1">
-                        Contact via {profile.preferred_contact}
+                        Contact via <span className={classes.noWrap}>{profile.preferred_contact}</span>
                     </Typography>
                 )}
                 {!showRemove && showConnect && connectButton}
@@ -201,29 +206,34 @@ export default function UserCard(props){
                 </>
             )}
             {showRemove && showConnect && connectButton}
+            {showSkip && (
+                <Button
+                    variant='contained'
+                    color='secondary'
+                    onClick={skipMeeting}
+                >
+                    Skip
+                </Button>
+            )}
             {showLastMet && (
-                <>
-                    <Button>
-                        Skip
+                <div>
+                    <Button
+                        onClick = {()=>setDatePickerOpen(true)}
+                        variant='contained'
+                        color = 'primary'
+                        fullWidth
+                    >
+                        Mark&nbsp;met
                     </Button>
-                    <div>
-                        <Button
-                            onClick = {()=>setDatePickerOpen(true)}
-                            variant='contained'
-                            color = 'primary'
-                        >
-                            Mark&nbsp;met
-                        </Button>
-                        <DatePicker
-                            style={{display: 'none'}}
-                            open={datePickerOpen}
-                            disableFuture
-                            onChange={submitNewMeetingDate}
-                            onClose={()=>setDatePickerOpen(false)}
-                            hidden
-                        />
-                    </div>
-                </>
+                    <DatePicker
+                        style={{display: 'none'}}
+                        open={datePickerOpen}
+                        disableFuture
+                        onChange={submitNewMeetingDate}
+                        onClose={()=>setDatePickerOpen(false)}
+                        hidden
+                    />
+                </div>
             )}
             <div style={showTimesAvailable ? {gridColumnStart: 'span 2'}:{}}>
                 {showTimesAvailable && 
