@@ -35,36 +35,50 @@ module.exports = async function(){
             if(!user.email) continue;
             let available = await getUserAvailableMatches(user.id, 5);
             if(available.length === 0) continue;
-
-            available = available.map(friend => {
-                let dayStrings = [];
-                for(let i=0; i<7; i++) dayStrings.push(undefined);
-                
-                friend.times.forEach(({start_time, end_time, week_day}) => {
-                    if(dayStrings[week_day]){
-                        dayStrings[week_day] += `, ${formatTime(start_time)} to ${formatTime(end_time)}`;
-                    } else {
-                        dayStrings[week_day] = `${days[week_day]}, from ${formatTime(start_time)} to ${formatTime(end_time)}`;
-                    }
-                });
-                dayStrings = dayStrings.filter(a => !!a).map(str => {
-                    const lastComma = str.lastIndexOf(',');
-                    if(lastComma === str.indexOf(',')) return str;
-                    return str.substring(0, lastComma) + 'and' + str.substring(lastComma + 1);
-                })
-                return (
-                    `${friend.full_name} is free :\n\t${dayStrings.join('\n\t')}\n\n`
-                );
-            });
-            
-            const textToSend = (
-                `Hello, ${user.full_name}\n` +
-                `We found ${available.length > 1 ? 'these connections are ' : 'this connection is '}` +
-                `available at similar times to you:\n\n${available.join('\n\n')}`
-            )
-            console.log(textToSend);
-            sendEmail(user.email, textToSend);
+            const plainText = getPlainText(user, available);
+            console.log(JSON.stringify(plainText));
+            sendEmail(user.email, plainText);
         }
         offset += BATCH_SIZE;
     } while (userRows.length === BATCH_SIZE);
+}
+
+function getPlainText(user, available){
+    available = available.map(friend => {
+        let dayStrings = [];
+        for(let i=0; i<7; i++) dayStrings.push(undefined);
+        
+        friend.times.forEach(({start_time, end_time, week_day}) => {
+            if(dayStrings[week_day]) dayStrings[week_day].push({
+                start_time: formatTime(start_time),
+                end_time: formatTime(end_time)
+            });
+            else dayStrings[week_day] = [{
+                start_time: formatTime(start_time),
+                end_time: formatTime(end_time)
+            }];
+        });
+
+        dayStrings = dayStrings.map((times, dayIndex) => {
+            if(!times) return undefined;
+            const timeStr = [`${days[dayIndex]} from ${times[0].start_time} to ${times[0].end_time}`];
+            for(var i = 1; i < times.length - 1; i++ ){
+                timeStr.push(`, ${times[i].start_time} to ${times[i].end_time}`);
+            }
+            if(timeStr.length > 1){
+                timeStr.push(`and ${times[i].start_time} to ${times[i].end_time}`);
+            }
+            return timeStr.join('');
+        });
+
+        return (
+            `${friend.full_name} is free ${dayStrings.filter(a => !!a).join(', ')}.`
+        );
+    });
+    
+    return (
+        `Hello, ${user.full_name}\n` +
+        `We believe the following ${available.length > 1 ? 'connections are ' : 'connection is '}` +
+        `available at similar times to you:\n\t${available.join('\n\t')}`
+    );
 }
