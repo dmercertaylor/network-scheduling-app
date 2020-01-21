@@ -184,8 +184,8 @@ export default function UserCard(props){
                     </Typography>
                 }
                 {showContact && profile.preferred_contact && (
-                    <Typography variant="body1">
-                        Contact via <span className={classes.noWrap}>{profile.preferred_contact}</span>
+                    <Typography className={classes.noWrap} variant="body1">
+                        {profile.preferred_contact}
                     </Typography>
                 )}
                 {!showRemove && showConnect && connectButton}

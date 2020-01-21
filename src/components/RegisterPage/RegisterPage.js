@@ -10,6 +10,12 @@ const useStyles = makeStyles( theme => ({
     textAlign: 'center',
     marginTop: '24px'
   },
+  registrationInput: {
+    minWidth: '10rem',
+    width: '75vw',
+    maxWidth: '18rem',
+    margin: '8px 0'
+  },
   header: {
     marginBottom: '0px'
   },
@@ -88,6 +94,7 @@ export default function RegisterPage(){
         <div>
           <TextField
             required
+            className={classes.registrationInput}
             label="Username"
             value={username}
             onChange={e => setUsername(e.target.value)}
@@ -97,6 +104,7 @@ export default function RegisterPage(){
         <div>
           <TextField
             required
+            className={classes.registrationInput}
             label="Full Name"
             value={name}
             onChange={e => setName(e.target.value)}
@@ -106,6 +114,7 @@ export default function RegisterPage(){
         <div>
           <TextField
             required
+            className={classes.registrationInput}
             label="Email"
             value={email}
             onChange={e => setEmail(e.target.value)}
@@ -115,6 +124,7 @@ export default function RegisterPage(){
         <div>
           <TextField
             required
+            className={classes.registrationInput}
             type="password"
             label="Password"
             value={password}
@@ -125,6 +135,7 @@ export default function RegisterPage(){
         <div>
           <TextField
             label="Company"
+            className={classes.registrationInput}
             value={company}
             onChange={e => setCompany(e.target.value)}
           />
@@ -132,15 +143,18 @@ export default function RegisterPage(){
         <div>
           <TextField
             label="Location"
+            className={classes.registrationInput}
             value={location}
             onChange={e => setLocation(e.target.value)}
           />
         </div>
         <div>
           <TextField
-            label="Contact Method"
+            label="Contact"
+            className={classes.registrationInput}
             value={contact}
             onChange={e => setContact(e.target.value)}
+            helperText="Enter a phone number, email, or other way you'd prefer people to contact you."
           />
         </div>
         <AvatarUpload

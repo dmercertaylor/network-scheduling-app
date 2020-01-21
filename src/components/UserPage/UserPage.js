@@ -33,11 +33,14 @@ const useStyle = makeStyles(theme => ({
     display: 'grid',
     alignItems: 'center',
     justifyContent: 'center',
-    gridTemplateColumns: '1fr 1fr',
+    gridTemplateColumns: 'auto max-content',
     fontSize: "1rem"
   },
   textRight: {
     textAlign: 'right'
+  },
+  spanTwo: {
+    gridColumn: 'span 2'
   }
 }));
 
@@ -94,6 +97,18 @@ export default function UserPage(){
       </Typography>
       <div className={classes.contactInfo}>
         {ContactInfo}
+        {profile.email && (
+          <>
+            <div className={classes.textRight}>Email&nbsp;:</div>
+            <div>&nbsp;{profile.email}</div>
+          </>
+        )}
+        {profile.preferred_contact && (
+          <>
+            <div className={classes.textRight}>Contact&nbsp;:</div>
+            <div>&nbsp;{profile.preferred_contact}</div>
+          </>
+        )}
       </div>
       <WeekTimeInput />
       <Typography variant="body2" className={classes.switchContainer}>
