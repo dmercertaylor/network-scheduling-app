@@ -14,7 +14,7 @@ const searchRouter = require('./routes/search.router');
 const connectionsRouter = require('./routes/connections.router');
 const availabilityRouter = require('./routes/availability.router');
 
-app.use(bodyParser.json( {limit: '2mb'} ));
+app.use(bodyParser.json( {limit: '3.3mb'} ));
 app.use(bodyParser.urlencoded({ extended: true, limit: '2mb'}));
 app.use(express.static('build'));
 

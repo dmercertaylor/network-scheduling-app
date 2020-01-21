@@ -226,7 +226,7 @@ export default function WeekTimeInput(props){
                         variant="contained"
                         onClick={resetTimesAvailable}
                         className={classes.gutterBottom}
-                    >Cancle</Button>
+                    >Cancel</Button>
                 )}
                 <Button
                     variant="contained"

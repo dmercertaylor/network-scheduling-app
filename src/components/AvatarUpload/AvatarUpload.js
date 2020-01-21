@@ -10,6 +10,7 @@ export default function AvatarUpload(props){
 
     const [preview, setPreview] = useState('/assets/sampleAvatar.png');
     const [modalOpen, setModalOpen] = useState(false);
+    const [fileLoaded, setFileLoaded] = useState(false);
     const theme = useTheme();
     const avatarSize = 132;
     const previewStyle = {
@@ -42,10 +43,11 @@ export default function AvatarUpload(props){
     }
 
     const onBeforeFileLoad = (elem) => {
-        if(elem.target.files[0].size > 1500000){
+        if(elem.target.files[0].size > 3000000){
             alert("Image size too large");
             elem.target.value = "";
         }
+        setFileLoaded(true);
     }
 
     return(
@@ -55,7 +57,7 @@ export default function AvatarUpload(props){
                 color="primary"
                 onClick={()=>setModalOpen(true)}
             >
-                Add Profile Image
+                Set Profile Image
             </Button>
             <Modal
                 open={modalOpen}
@@ -69,6 +71,12 @@ export default function AvatarUpload(props){
                         onCrop={img => setPreview(img)}
                         onClose={onClose}
                     />
+                    {!fileLoaded && <Button
+                            color='secondary'
+                            variant='contained'
+                            onClick={onClose}
+                            fullWidth
+                        >Cancel</Button>}
                 </Paper>
             </Modal>
             <div style={previewStyle} id="avatar-input-helper" />
@@ -78,7 +86,7 @@ export default function AvatarUpload(props){
                 variant='caption'
                 id="avatar-input-helper"
             >
-                Images must be no more than 1.5mb
+                Images must be no more than 3mb
             </Typography>
         </div>
     )
