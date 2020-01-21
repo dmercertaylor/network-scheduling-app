@@ -15,7 +15,8 @@ CREATE TABLE "user" (
   "avatar_url" varchar,
   "preferred_contact" varchar,
   "email" varchar,
-  "status" int DEFAULT 0 -- 0: available, 1: unavailable
+  "status" int DEFAULT 0, -- 0: available, 1: unavailable
+  "notifications" int DEFAULT 1 -- 0 for none, 1 for just emails.
 );
 
 CREATE TABLE "login" (

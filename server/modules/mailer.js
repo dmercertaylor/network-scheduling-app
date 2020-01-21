@@ -12,7 +12,7 @@ module.exports = (email, contents) => {
     const mailOptions = {
         from: process.env.NODEMAILER_USER,
         to: email,
-        subject: "Scheduled Email",
+        subject: "You're Weekly Connections!",
         text: contents
     }
 

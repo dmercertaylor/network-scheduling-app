@@ -172,7 +172,7 @@ export default function UserPage(){
         dispatch({type: 'FETCH_PROFILE'});
       }
     }
-  }, [dispatch, status, profile.status]);
+  }, [dispatch, status]);
 
   // handle status switch changes
   const toggleAvailable = () => {
@@ -208,7 +208,10 @@ export default function UserPage(){
       <LoadingModal />
       <div className={classes.imgWrapper}>
         <img
-          src={`${profile.avatar_url}?hash=${avatarURLHash}` || '/assets/sampleAvatar.png'}
+          src={profile.avatar_url ?
+            `${profile.avatar_url}?hash=${avatarURLHash}` :
+            '/assets/sampleAvatar.png'
+          }
           alt={`${profile.full_name}'s Avatar`}
           className={classes.profilePicture}
         />

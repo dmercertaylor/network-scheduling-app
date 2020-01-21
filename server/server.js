@@ -4,8 +4,10 @@ require('dotenv').config();
 const app = express();
 const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
+const CronJob = require('cron').CronJob;
 
 const passport = require('./strategies/user.strategy');
+const mailUsersConnections = require('./modules/mailUsersConnections')
 
 const userRouter = require('./routes/user.router');
 const emailRouter = require('./routes/email.router');
@@ -33,5 +35,6 @@ app.use('/api/availability', availabilityRouter);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
+    new CronJob('30 * * * * *', mailUsersConnections, null, true, 'America/Chicago');
     console.log(`Listening on port: ${PORT}`);
 })
