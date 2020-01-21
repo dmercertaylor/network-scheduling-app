@@ -8,12 +8,13 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-module.exports = (email, contents) => {
+module.exports = (email, textContents, htmlContents) => {
     const mailOptions = {
         from: process.env.NODEMAILER_USER,
         to: email,
         subject: "You're Weekly Connections!",
-        text: contents
+        text: textContents,
+        html: htmlContents || undefined
     }
 
     transporter.sendMail(mailOptions, (err, info) => {

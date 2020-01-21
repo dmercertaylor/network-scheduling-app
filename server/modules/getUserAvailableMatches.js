@@ -48,7 +48,7 @@ module.exports = async (id, limit) => {
 
         const matched = [];
         
-        friendTimes.forEach(friend => {
+        for(friend of friendTimes){
             const newTimes = friend;
             newTimes.times = [];
             for(let i=0; i<friend.week_days.length; i++){
@@ -76,6 +76,6 @@ module.exports = async (id, limit) => {
                     return matched;
                 }
             }
-        });
+        };
     return matched;
 }

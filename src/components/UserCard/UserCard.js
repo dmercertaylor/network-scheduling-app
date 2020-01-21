@@ -40,6 +40,9 @@ const useStyles = makeStyles(theme => ({
         backgroundSize: 'cover',
         borderRadius: '50%',
         border: '2px solid ' + theme.palette.text.primary,
+    },
+    span2: {
+        gridColumn: 'span 2'
     }
 }));
 
@@ -73,11 +76,29 @@ export default function UserCard(props){
     const classes = useStyles(theme);
     const {profile, showConnect, showContact,
         showRemove, showTimesAvailable, showLastMet, showSkip} = props;
+
     const [openModal, setOpenModal] = useState(false);
     const [confirmRemoveDialogOpen, setConfirmRemoveDialogOpen] = useState(false);
     const [datePickerOpen, setDatePickerOpen] = useState(false);
+
+
     const dispatch = useDispatch();
     let connectButton;
+
+    // if preferredcontact is an email address, wrap it in spans
+    // so that it will wrap at the @ sign. Else, nowrap it.
+    let preferredContactText = profile.preferred_contact || null;
+    if(showContact && preferredContactText.includes('@')){
+        preferredContactText = preferredContactText.split('@');
+        preferredContactText = (
+            <>
+                <span className={classes.noWrap}>{preferredContactText[0]}@</span>
+                 <span className={classes.noWrap}>{preferredContactText[1]}</span>
+            </>
+        );
+    } else {
+        preferredContactText = <span className={classes.noWrap}>{preferredContactText}</span>
+    }
 
     useEffect(()=>{
         profile.last_met = new Date(profile.last_met);
@@ -175,7 +196,11 @@ export default function UserCard(props){
                 {profile.met_at &&
                     <Typography variant='body1'>
                         Met at {profile.met_at}
-                    </Typography>}
+                    </Typography>
+                }
+                {!showRemove && showConnect && connectButton}
+            </div>
+            <div className={classes.span2}>
                 {showLastMet &&
                     <Typography variant='body1'>
                         {profile.last_met ?
@@ -184,11 +209,10 @@ export default function UserCard(props){
                     </Typography>
                 }
                 {showContact && profile.preferred_contact && (
-                    <Typography className={classes.noWrap} variant="body1">
-                        {profile.preferred_contact}
+                    <Typography style={{wordBreak: 'break-all'}} variant="body1">
+                        {preferredContactText}
                     </Typography>
                 )}
-                {!showRemove && showConnect && connectButton}
             </div>
             {showRemove && (
                 <>
