@@ -26,7 +26,9 @@ function* fetchProfile() {
 
 function* updateProfile(action){
   try{
-    yield put({ type: 'START_LOADING' });
+    if(!action.payload.noUpdate){
+      yield put({ type: 'START_LOADING' });
+    }
 
     const config = {
       headers: { 'Content-Type': 'application/json' },
@@ -38,9 +40,9 @@ function* updateProfile(action){
     } else {
       yield axios.put('/api/profile', action.payload, config);
       yield put({type: 'FETCH_PROFILE'});
+      yield put({ type: 'STOP_LOADING' });
     }
 
-    yield put({ type: 'STOP_LOADING' });
   } catch (error) {
     console.log('Profile put request failed', error);
   }

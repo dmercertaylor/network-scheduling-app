@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
         border: '2px solid ' + theme.palette.text.primary,
     },
     span2: {
-        gridColumn: 'span 2'
+        gridColumnStart: 'span 2'
     }
 }));
 

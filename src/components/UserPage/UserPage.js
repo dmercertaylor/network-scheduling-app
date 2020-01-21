@@ -154,6 +154,7 @@ export default function UserPage(){
   const dispatch = useCallback(useDispatch(), []);
   const profile = useSelector(state => state.profile);
   const [status, setStatus] = useState(profile.status);
+  const [notifications, setNotifications] = useState(profile.notifications);
   const [editMode, setEditMode] = useState(false);
   const [avatarURLHash, setAvatarURLHash] = useState(0);
   
@@ -163,21 +164,30 @@ export default function UserPage(){
 
   useEffect(() => {
     setStatus(profile.status);
+    setNotifications(profile.notifications);
     // update profile if status has changed
-  }, [profile.status]);
+  }, [profile.status, profile.notifications]);
 
   useEffect(()=>{
     return function(){
-      if(status !== profile.status){
+      if(status !== profile.status || notifications !== profile.notifications){
         dispatch({type: 'FETCH_PROFILE'});
       }
     }
-  }, [dispatch, status]);
+  }, [dispatch, status, notifications]);
 
   // handle status switch changes
   const toggleAvailable = () => {
     dispatch({type: "UPDATE_PROFILE", payload:{status: status?0:1, noUpdate: true}});
     setStatus(status ? 0 : 1);
+  }
+
+  const toggleNotifications = () => {
+    dispatch({type: "UPDATE_PROFILE", payload: {
+      notifications: notifications ? 0 : 1,
+      noUpdate: true
+    }});
+    setNotifications(notifications ? 0 : 1);
   }
 
   const contactInfo = editMode ?
@@ -227,6 +237,17 @@ export default function UserPage(){
           checked={status !== 0}
           color="primary"
           onClick={toggleAvailable}
+        />
+      </Typography>
+      <Typography variant="body2" className={classes.switchContainer}>
+        <label htmlFor="emailNotificationsSwitch">
+          { notifications ? 'Email Notifications On':'Email Notifications Off' }
+        </label>
+        <Switch
+          id="emailNotificationsSwitch"
+          checked={notifications !== 0}
+          color="primary"
+          onClick={toggleNotifications}
         />
       </Typography>
       <Button

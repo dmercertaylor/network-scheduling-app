@@ -22,15 +22,16 @@ router.put('/updateTimes', rejectUnauthenticated, async (req, res) => {
         const config = [req.user.user_id];
         // map values, pushing values to config and adding
         // appropriate macros to the "values" string
-        const values = req.body.map((time, i) => {
-            config.push(time.week_day, time.start_time, time.end_time);
-            return `($1, $${i*3+2}, $${i*3+3}, $${i*3+4})`;
-        }).join(', ');
-        const insertQuery = `
-            INSERT INTO "weekly_availability" ("user_id", "week_day", "start_time", "end_time")
-            VALUES ${values}
-        `
-        await pool.query(insertQuery, config);
+        if(req.body.length){
+            const values = req.body.map((time, i) => {
+                config.push(time.week_day, time.start_time, time.end_time);
+                return `($1, $${i*3+2}, $${i*3+3}, $${i*3+4})`;
+            }).join(', ');
+            const insertQuery = `
+                INSERT INTO "weekly_availability" ("user_id", "week_day", "start_time", "end_time")
+                VALUES ${values}`
+            await pool.query(insertQuery, config);
+        }
         res.sendStatus(200);
     } catch (error) {
         res.sendStatus(500);
@@ -40,7 +41,7 @@ router.put('/updateTimes', rejectUnauthenticated, async (req, res) => {
 
 router.put('/', rejectUnauthenticated, async (req, res) => {
     try{
-        const acceptedKeys = ['full_name', 'company', 'location', 'avatar_url', 'email', 'status', 'preferred_contact'];
+        const acceptedKeys = ['full_name', 'company', 'location', 'avatar_url', 'email', 'status', 'preferred_contact', 'notifications'];
         const config = [];
 
         const sets = Object.keys(req.body).filter(key => acceptedKeys.includes(key)).map((key, i) => {
