@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import WeekTimeInput from './WeekTimeInput';
 import { makeStyles, useTheme, Typography, Switch, Button, TextField } from '@material-ui/core';
 import AvatarUpload from '../AvatarUpload/AvatarUpload';
+import LoadingModal from '../LoadingModal/LoadingModal';
 
 const useStyle = makeStyles(theme => ({
   body: {
@@ -154,7 +155,12 @@ export default function UserPage(){
   const profile = useSelector(state => state.profile);
   const [status, setStatus] = useState(profile.status);
   const [editMode, setEditMode] = useState(false);
+  const [avatarURLHash, setAvatarURLHash] = useState(0);
   
+  useEffect(() => {
+    setAvatarURLHash(avatarURLHash + 1);
+  }, [profile]);
+
   useEffect(() => {
     setStatus(profile.status);
     // update profile if status has changed
@@ -199,9 +205,10 @@ export default function UserPage(){
 
   return (
     <div className={classes.body}>
+      <LoadingModal />
       <div className={classes.imgWrapper}>
         <img
-          src={profile.avatar_url || '/assets/sampleAvatar.png'}
+          src={`${profile.avatar_url}?hash=${avatarURLHash}` || '/assets/sampleAvatar.png'}
           alt={`${profile.full_name}'s Avatar`}
           className={classes.profilePicture}
         />

@@ -39,42 +39,44 @@ router.put('/updateTimes', rejectUnauthenticated, async (req, res) => {
 });
 
 router.put('/', rejectUnauthenticated, async (req, res) => {
-    const acceptedKeys = ['full_name', 'company', 'location', 'avatar_url', 'email', 'status', 'preferred_contact'];
-    const config = [];
+    try{
+        const acceptedKeys = ['full_name', 'company', 'location', 'avatar_url', 'email', 'status', 'preferred_contact'];
+        const config = [];
 
-    if(req.body.avatar){
-        const fileType = req.body.avatar.substring("data:image/".length, req.body.avatar.indexOf(";base64"));
-        const base64Data = new Buffer.from(req.body.avatar.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+        const sets = Object.keys(req.body).filter(key => acceptedKeys.includes(key)).map((key, i) => {
+            config.push(req.body[key]);
+            return `${key}=$${i+1}`
+        }).join(', ');
 
-        const params = {
-            Bucket: process.env.S3_BUCKET_NAME,
-            Key: `avatars/${req.user.user_id}.${fileType}`, // File name you want to save as in S3
-            Body: base64Data,
-            ContentEncoding: 'base64',
-            ContentType: `image/${fileType}`
-        };
+        if(config.length > 0){
+            const query = `
+                UPDATE "user" SET ${sets}
+                WHERE "id"=$${config.length + 1}`;
+            config.push(req.user.user_id);
+            await pool.query(query, config);
 
-        s3.upload(params);
-        delete req.body.avatar;
-    }
-
-    const sets = Object.keys(req.body).filter(key => acceptedKeys.includes(key)).map((key, i) => {
-        config.push(req.body[key]);
-        return `${key}=$${i+1}`
-    }).join(', ');
-
-    if(config.length > 0){
-        const query = `UPDATE "user" SET ${sets} WHERE "id"=$${config.length + 1}`;
-        config.push(req.user.user_id);
-        pool.query(query, config).then(results => {
+            if(req.body.avatar){
+                const fileType = req.body.avatar.substring("data:image/".length, req.body.avatar.indexOf(";base64"));
+                const base64Data = new Buffer.from(req.body.avatar.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+        
+                const params = {
+                    Bucket: process.env.S3_BUCKET_NAME,
+                    Key: `avatars/${req.user.user_id}.${fileType}`, // File name you want to save as in S3
+                    Body: base64Data,
+                    ContentEncoding: 'base64',
+                    ContentType: `image/${fileType}`
+                };
+        
+                await s3.upload(params).promise();
+            }
             res.sendStatus(200);
-        }).catch(error => {
-            console.log(error);
-            res.sendStatus(500);
-        });
-    }
-    else {
-        res.sendStatus(200);
+        }
+        else {
+            res.sendStatus(200);
+        }
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
     }
 });
 

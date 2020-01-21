@@ -3,8 +3,10 @@
 const loadingReducer = (state = false, action) => {
     switch (action.type) {
       case 'START_LOADING':
+        console.log("here");
         return true;
       case 'STOP_LOADING':
+        console.log("here");
         return false;
       default:
         return state;

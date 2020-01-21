@@ -26,6 +26,8 @@ function* fetchProfile() {
 
 function* updateProfile(action){
   try{
+    yield put({ type: 'START_LOADING' });
+
     const config = {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true,
@@ -37,14 +39,16 @@ function* updateProfile(action){
       yield axios.put('/api/profile', action.payload, config);
       yield put({type: 'FETCH_PROFILE'});
     }
+
+    yield put({ type: 'STOP_LOADING' });
   } catch (error) {
     console.log('Profile put request failed', error);
   }
 }
 
 function* profileSaga() {
-  yield takeLatest('FETCH_PROFILE', fetchProfile);
   yield takeLatest('UPDATE_PROFILE', updateProfile);
+  yield takeLatest('FETCH_PROFILE', fetchProfile);
 }
 
 export default profileSaga;
