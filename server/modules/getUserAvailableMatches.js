@@ -43,8 +43,8 @@ module.exports = async (id, limit, name) => {
             ORDER BY GREATEST("f"."last_met", "f"."skip_date") ASC`;
         
         const config = name ? [id, `%${name}%`] : [id];
-        let userTimes = await pool.query(userQuery, config);
-        let friendTimes = await pool.query(friendsQuery, [id]);
+        let userTimes = await pool.query(userQuery, [id]);
+        let friendTimes = await pool.query(friendsQuery, config);
         friendTimes = friendTimes.rows;
         userTimes = userTimes.rows;
 
