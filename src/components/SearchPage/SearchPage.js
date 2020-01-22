@@ -30,13 +30,6 @@ function SearchResults(){
     const term = search.searchTerm;
     const dispatch = useCallback(useDispatch(), []);
 
-    useEffect(()=>{
-        dispatch({
-            type: 'FETCH_SEARCH',
-            payload: term
-        });
-    }, [refresh, dispatch]);
-
     return (
         <>
             <Typography variant='h5' component='h2' paragraph>
@@ -54,14 +47,26 @@ export default function SearchPage(){
     const classes = useStyles(theme);
 
     const [searchTerm, setSearchTerm] = useState('');
-    const searchResults = useSelector(state => state.searchResults);
+    const [searchEntered, setSearchEntered] = useState(false);
     const dispatch = useDispatch();
 
+    useEffect(()=>{
+        dispatch({
+            type: 'SET_SEARCH_RESULTS',
+            payload: {
+                results: [],
+                searchTerm: ''
+            }
+        });
+    }, []);
+
     const onSearch = e => {
+        if(searchTerm === '') return;
         e.stopPropagation();
         e.preventDefault();
-        dispatch({type: "FETCH_SEARCH", payload: searchTerm});
+        dispatch({type: "FETCH_SEARCH", payload: {searchTerm: searchTerm} } );
         setSearchTerm('');
+        if(!searchEntered) setSearchEntered(true);
     }
 
     return(
@@ -81,7 +86,7 @@ export default function SearchPage(){
                     <SearchIcon />
                 </IconButton>
             </Paper>
-            <SearchResults />
+            {searchEntered && <SearchResults />}
         </div>
     )
 }

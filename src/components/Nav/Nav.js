@@ -5,6 +5,11 @@ import { AppBar, Tabs, Tab} from '@material-ui/core';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import SearchIcon from '@material-ui/icons/Search';
+import HowToRegIcon from '@material-ui/icons/HowToReg';
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
+
 const useStyles = makeStyles( theme => ({
   navTitle: {
     textAlign: 'center',
@@ -58,10 +63,10 @@ export default function Nav(props){
         onChange = {(e, v)=>setActiveTab(v)}
         variant="fullWidth"
       >
-        <Tab label="Profile" value={0} href="#home" {...a11yProps(0)} />
-        <Tab label="User Search" value={1} href="#search" {...a11yProps(1)} />
-        <Tab label="Connections" value={2} href="#connections" {...a11yProps(2)} />
-        <Tab label="Available" value={3} href="#available" {...a11yProps(3)} />
+        <Tab aria-label="Profile" icon={<AccountCircleIcon />} value={0} href="#home" {...a11yProps(0)} />
+        <Tab aria-label="User Search" icon={<SearchIcon />} value={1} href="#search" {...a11yProps(1)} />
+        <Tab aria-label="Connections" icon={<HowToRegIcon />} value={2} href="#connections" {...a11yProps(2)} />
+        <Tab aria-label="Available" icon={<RecentActorsIcon />} value={3} href="#available" {...a11yProps(3)} />
       </Tabs>
     </AppBar>
   );
