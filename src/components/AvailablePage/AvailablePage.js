@@ -92,8 +92,8 @@ export default function AvailablePage(){
                 onSubmit={onSearch}
             >
                 <InputBase
-                    placeholder="Search Connections"
-                    inputProps={{'aria-label': 'search connections'}}
+                    placeholder="Search Available"
+                    inputProps={{'aria-label': 'search available'}}
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                 />
