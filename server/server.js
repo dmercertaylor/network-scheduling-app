@@ -15,6 +15,7 @@ const profileRouter = require('./routes/profile.router');
 const searchRouter = require('./routes/search.router');
 const connectionsRouter = require('./routes/connections.router');
 const availabilityRouter = require('./routes/availability.router');
+const messagesRouter = require('./routes/messages.router');
 
 app.use(bodyParser.json( {limit: '3.3mb'} ));
 app.use(bodyParser.urlencoded({ extended: true, limit: '2mb'}));
@@ -31,6 +32,7 @@ app.use('/api/email', emailRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/connections', connectionsRouter);
 app.use('/api/availability', availabilityRouter);
+app.use('/api/messages', messagesRouter);
 
 const PORT = process.env.PORT || 5000;
 
