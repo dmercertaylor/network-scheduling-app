@@ -1,11 +1,8 @@
-CREATE DATABASE "dmt_prime_solo";
-\connect "dmt_prime_solo"
-
 --DROP TABLE "login";
 --DROP TABLE "friends";
 --DROP TABLE "weekly_availability";
---DROP TABLE "matched_availability";
 --DROP TABLE "user";
+--DROP TABLE "message";
 
 CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
@@ -36,6 +33,15 @@ CREATE TABLE "friends" (
   "met_at" varchar
 );
 
+CREATE TABLE "message" (
+	"id" SERIAL PRIMARY KEY,
+	"time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP(0),
+	"content" VARCHAR,
+	"status" int DEFAULT 1, -- 0: recieved, 1: sent
+	"sender" int REFERENCES "user"("id"),
+	"recipient" int REFERENCES "user" ("id")
+);
+
 CREATE TABLE "weekly_availability" (
   "id" SERIAL PRIMARY KEY,
   "user_id" int REFERENCES "user" ("id"),
@@ -57,3 +63,16 @@ BEGIN
 END;
 $$
 LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION "send_message" ("sender_id" INT, "receive_id" INT, "message" VARCHAR, "time" TIMESTAMP)
+RETURNS void AS $$
+BEGIN
+	IF EXISTS (
+		SELECT 1 FROM "friends"
+		WHERE "user_id"=$1 AND "friend_id"=$2 AND "pending"=0
+	)
+	THEN INSERT INTO "message" ("sender", "recipient", "content", "time")
+	VALUES ($1, $2, $3, $4);
+	END IF;
+END;
+$$ LANGUAGE 'plpgsql';

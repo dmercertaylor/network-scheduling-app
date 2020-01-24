@@ -1,19 +1,21 @@
 import { combineReducers } from 'redux';
 import loading from './loadingReducer';
-import profile from './profileReducer';
 import authenticationReducers from './authentication/index';
-import searchResults from './searchResultsReducer';
-import searchChange from './searchChangeReducer';
-import connections from './connectionsReducer';
-import matched from './matchedReducer';
+
+// creates a reducer that, when the correct string is sent, sets state to action.payload.
+const createReducer = (str, type=[]) => {
+    return (state=type, action) => action.type === str ? action.payload : state;
+}
 
 const stateReducer = combineReducers({
     loading,
-    profile,
-    searchResults,
-    searchChange,
-    connections,
-    matched,
+    profile: createReducer('SET_PROFILE'),
+    searchResults: createReducer('SET_SEARCH_RESULTS'),
+    searchChange: createReducer('SEARCH_CHANGE'),
+    connections: createReducer('SET_CONNECTIONS'),
+    matched: createReducer('SET_MATCHED_TIMES'),
+    newMessages: createReducer('SET_NEW_MESSAGES'),
+    allMessages: createReducer('SET_ALL_MESSAGES'),
     ...authenticationReducers // reducers regaurding login
 });
 

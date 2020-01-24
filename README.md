@@ -1,5 +1,7 @@
 # SQueue
 
+[A deployed version of this app is available on heroku](dmt-scheduler.herokuapp.com).
+
 SQueue is an app that allows users to manage their existing network by reminding them that people exist.
 
 
