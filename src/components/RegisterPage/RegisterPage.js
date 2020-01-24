@@ -77,6 +77,17 @@ export default function RegisterPage(){
     }
   } // end registerUser
 
+  // Form demos, remove later
+  const autoFillForm = () => {
+    setUsername('dmercertaylor');
+    setEmail('dmercertaylor01@hamline.edu');
+    setPassword('password');
+    setCompany('Prime Digital Academy');
+    setLocation('St. Paul, MN');
+    setContact('651-354-9624');
+    setName('David Mercer-Taylor');
+  }
+
   return (
     <div className={classes.registerPage}>
       <LoadingModal />
@@ -90,7 +101,7 @@ export default function RegisterPage(){
         </Typography>
       )}
       <form onSubmit={registerUser}>
-        <h1 className={classes.header}>Register User</h1>
+        <h1 className={classes.header} onClick={autoFillForm}>Register User</h1>
         <div>
           <TextField
             required
