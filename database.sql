@@ -1,8 +1,8 @@
 --DROP TABLE "login";
+--DROP TABLE "message";
 --DROP TABLE "friends";
 --DROP TABLE "weekly_availability";
 --DROP TABLE "user";
---DROP TABLE "message";
 
 CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,

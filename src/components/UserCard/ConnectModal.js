@@ -14,19 +14,22 @@ const useStyles = makeStyles(theme => ({
         flexFlow: 'column nowrap',
         maxWidth: '100vw',
         padding: '16px 8px',
+        width: 'auto',
+        alignItems: 'center',
         backgroundColor: theme.palette.background.default
     },
     modalButtons: {
         display: 'flex',
         flexFlow: 'row wrap',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        width: '100%'
     },
     metInput: {
         margin: 16
     },
     noWrap: {
         whiteSpace: 'nowrap'
-    }
+    },
 }))
 
 export default function ConnectModal(props){
@@ -59,7 +62,7 @@ export default function ConnectModal(props){
                         htmlFor="met-at-input"
                     >
                         Met At:
-                    </Typography>
+                    </Typography><br />
                     <TextField
                         id="met-at-input"
                         helperText={

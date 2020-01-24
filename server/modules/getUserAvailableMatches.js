@@ -40,7 +40,7 @@ module.exports = async (id, limit, name) => {
             WHERE "u"."id"=$1 AND "f"."pending"=0 AND "fp"."status"=0
             ${name ? 'AND "fp"."full_name" ILIKE $2' : ''}
             GROUP BY "f"."friend_id", "fp"."id", "f"."last_met", "f"."met_at", "f"."skip_date"
-            ORDER BY GREATEST("f"."last_met", "f"."skip_date") ASC`;
+            ORDER BY GREATEST("f"."last_met", "f"."skip_date") ASC NULLS FIRST`;
         
         const config = name ? [id, `%${name}%`] : [id];
         let userTimes = await pool.query(userQuery, [id]);

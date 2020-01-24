@@ -1,14 +1,10 @@
 import axios from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
+import config from '../../modules/httpConfig';
 
 // worker Saga: will be fired on "FETCH_USER" actions
 function* fetchSearch(action) {
   try {
-    const config = {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-    };
-
     const query = action.payload.query ?
       '?' + Object.keys(action.payload.query)
         .map(key => `${key}=${action.payload.query[key]}`).join('&') : '';

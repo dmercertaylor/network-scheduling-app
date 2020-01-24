@@ -1,14 +1,10 @@
 import axios from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
+import config from '../../modules/httpConfig';
 
 // worker Saga: will be fired on "FETCH_USER" actions
 function* makeConnection(action) {
   try {
-    const config = {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-    };
-
     yield axios.post(`/api/connections/sendRequest`, action.payload, config);
     yield put({type: "SEARCH_CHANGE", payload: 'new'});
   } catch (error) {
@@ -18,11 +14,6 @@ function* makeConnection(action) {
 
 function* acceptConnection(action){
     try {
-    const config = {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
-    };
-
     yield axios.put(
         `/api/connections/acceptConnection/${action.payload}`,
         config);
@@ -34,11 +25,6 @@ function* acceptConnection(action){
 
 function* removeConnection(action){
   try {
-    const config = {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
-    };
-
     yield axios.delete(`/api/connections/${action.payload}`, config);
     yield put({type: 'FETCH_CONNECTIONS'});
     } catch (error) {

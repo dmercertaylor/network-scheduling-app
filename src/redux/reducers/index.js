@@ -14,8 +14,7 @@ const stateReducer = combineReducers({
     searchChange: createReducer('SEARCH_CHANGE'),
     connections: createReducer('SET_CONNECTIONS'),
     matched: createReducer('SET_MATCHED_TIMES'),
-    newMessages: createReducer('SET_NEW_MESSAGES'),
-    allMessages: createReducer('SET_ALL_MESSAGES'),
+    messages: createReducer('SET_MESSAGES'),
     ...authenticationReducers // reducers regaurding login
 });
 

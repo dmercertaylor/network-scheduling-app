@@ -80,7 +80,7 @@ export default function UserCard(props){
     const [openModal, setOpenModal] = useState(false);
     const [confirmRemoveDialogOpen, setConfirmRemoveDialogOpen] = useState(false);
     const [datePickerOpen, setDatePickerOpen] = useState(false);
-
+    const [chatOpen, setChatOpen] = useState(false);
 
     const dispatch = useDispatch();
     let connectButton;
@@ -101,7 +101,7 @@ export default function UserCard(props){
     }
 
     useEffect(()=>{
-        profile.last_met = new Date(profile.last_met);
+        profile.last_met = profile.last_met ? new Date(profile.last_met) : null;
     }, [profile]);
 
     const removeConnection = () => {
@@ -203,7 +203,7 @@ export default function UserCard(props){
             <div className={classes.span2}>
                 {showLastMet &&
                     <Typography variant='body1'>
-                        {profile.last_met ?
+                        {profile.last_met && profile.last_met !== 'null' ?
                             `Last met ${new Date(profile.last_met).toLocaleDateString("en-US")}` :
                             `No past meetings`}
                     </Typography>

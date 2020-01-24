@@ -48,6 +48,8 @@ export default function SearchPage(){
 
     const [searchTerm, setSearchTerm] = useState('');
     const [searchEntered, setSearchEntered] = useState(false);
+    const searchChange = useSelector(state => state.searchChange);
+    const previousSearchTerm = useSelector(state => state.searchResults.searchTerm);
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -59,6 +61,15 @@ export default function SearchPage(){
             }
         });
     }, []);
+
+    useEffect(()=>{
+        dispatch({
+            type: 'FETCH_SEARCH',
+            payload: {
+                searchTerm: previousSearchTerm
+            }
+        });
+    }, [searchChange])
 
     const onSearch = e => {
         if(searchTerm === '') return;

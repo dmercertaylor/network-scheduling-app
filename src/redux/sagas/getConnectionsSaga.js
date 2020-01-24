@@ -1,12 +1,9 @@
 import axios from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
+import config from '../../modules/httpConfig';
 
 function* fetchConnections(){
     try{
-        const config = {
-            headers: { 'Content-Type': 'application/json' },
-            withCredentials: true,
-        }
         const response = yield axios.get('/api/connections', config);
         yield put({type: 'SET_CONNECTIONS', payload: response.data});
     } catch (error) {

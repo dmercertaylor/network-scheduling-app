@@ -1,14 +1,10 @@
 import axios from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
+import config from '../../modules/httpConfig';
 
 // worker Saga: will be fired on "FETCH_USER" actions
 function* fetchProfile() {
   try {
-    const config = {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-    };
-
     // the config includes credentials which
     // allow the server session to recognize the user
     // If a user is logged in, this will return their information
@@ -30,10 +26,6 @@ function* updateProfile(action){
       yield put({ type: 'START_LOADING' });
     }
 
-    const config = {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-    }
     if(action.payload.noUpdate){
       delete action.payload.noUpdate;
       yield axios.put('/api/profile', action.payload, config);
