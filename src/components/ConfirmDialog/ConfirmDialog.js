@@ -19,10 +19,10 @@ export default function ConfirmDialog(props){
             <DialogActions>
                 {/* props.onCancel and props.onConfirm
                  is a function passed from the parent component */}
-                <Button autoFocus onClick={props.onCancel} color="primary">
+                <Button autoFocus onClick={props.onCancel} color="white">
                     {props.cancelText || 'Cancel'}
                 </Button>
-                <Button onClick={props.onConfirm} color="primary">
+                <Button onClick={props.onConfirm} color="white">
                     {props.confirmText || 'Ok'}
                 </Button>
             </DialogActions>

@@ -32,7 +32,7 @@ module.exports = async function(){
         userRows = await pool.query(selectUsers, [BATCH_SIZE, offset]);
         userRows = userRows.rows;
         for(user of userRows){
-            if(!user.email) continue;
+            if(!user.email || user.email === '') continue;
             let available = await getUserAvailableMatches(user.id, 5);
             if(available.length === 0) continue;
             const plainText = getPlainText(user, available);

@@ -39,7 +39,7 @@ const PORT = process.env.PORT || 5000;
 // N: On a distributed server, you'd just move this to it's own process
 // (which is not difficult). This cronjob is only running on this instance
 // of node for the sake of brevity.
-// new CronJob('* * * 0 * *', mailUsersConnections, null, true);
+// new CronJob('0 0 0 */7 * *', mailUsersConnections, null, true);
 
 app.listen(PORT, () => {
     console.log(`Listening on port: ${PORT}`);

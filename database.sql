@@ -1,8 +1,8 @@
---DROP TABLE "login";
---DROP TABLE "message";
---DROP TABLE "friends";
---DROP TABLE "weekly_availability";
---DROP TABLE "user";
+DROP TABLE "login";
+DROP TABLE "message";
+DROP TABLE "friends";
+DROP TABLE "weekly_availability";
+DROP TABLE "user";
 
 CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
@@ -13,7 +13,7 @@ CREATE TABLE "user" (
   "preferred_contact" varchar,
   "email" varchar,
   "status" int DEFAULT 0, -- 0: available, 1: unavailable
-  "notifications" int DEFAULT 1 -- 0 for none, 1 for just emails.
+  "notifications" int DEFAULT 0 -- 0 for none, 1 for just emails.
 );
 
 CREATE TABLE "login" (

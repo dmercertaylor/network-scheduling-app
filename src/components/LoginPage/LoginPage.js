@@ -27,7 +27,13 @@ const useStyles = makeStyles( theme => ({
   },
   button: {
     margin: '12px'
-  }
+  },
+  loginInput: {
+    minWidth: '10rem',
+    width: '55vw',
+    maxWidth: '18rem',
+    margin: '8px 0'
+  },
 }));
 
 export default function LoginPage(){
@@ -72,6 +78,7 @@ export default function LoginPage(){
             value={username}
             onChange={e => setUsername(e.target.value)}
             variant="standard"
+            className={classes.loginInput}
             autoFocus
           />
         </div>
@@ -80,6 +87,7 @@ export default function LoginPage(){
             type="password"
             label="Password"
             value={password}
+            className={classes.loginInput}
             onChange={e => setPassword(e.target.value)}
           />
         </div>

@@ -88,7 +88,7 @@ export default function UserCard(props){
     // if preferredcontact is an email address, wrap it in spans
     // so that it will wrap at the @ sign. Else, nowrap it.
     let preferredContactText = profile.preferred_contact || null;
-    if(showContact && preferredContactText.includes('@')){
+    if(showContact && preferredContactText && preferredContactText.includes('@')){
         preferredContactText = preferredContactText.split('@');
         preferredContactText = (
             <>
