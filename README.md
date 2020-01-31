@@ -1,4 +1,4 @@
-# SQueue
+# Network Scheduler App
 
 [A deployed version of this app is available on heroku](dmt-scheduler.herokuapp.com).
 
