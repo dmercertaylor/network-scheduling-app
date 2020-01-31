@@ -2,8 +2,9 @@
 
 [A deployed version of this app is available on heroku](dmt-scheduler.herokuapp.com).
 
-SQueue is an app that allows users to manage their existing network by reminding them that people exist.
+The Network Scheduler allows users to manage their existing network by reminding them that people exist. Often, I find myself at meetups or similar events, where I will meet with people, connect on LinkedIn, and never see or hear from them again. This app aims to remedy that by providing a simple feature missing from LinkedIn: scheduling. Users may connect with one another in a manner similar to LinkedIn, mark times when they are available. Additionally, users may mark dates that they have recently met with their connections. Using these two features together, users will be presented with a list of their connections who are available at the same time as them, ordered from who they've seen recently to who they've seen most recently (there is also a button to skip connections to the back of the queue without actually marking a meeting).
 
+The app is laid out in four pages:
 
 From the profile page, users may view and edit their profile information, as well as mark times on a week-long grid when they are available. They may also toggle their availability off entirely.
 
